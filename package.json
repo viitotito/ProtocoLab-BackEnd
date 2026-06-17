@@ -2,10 +2,16 @@
   "name": "protocolab-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "install": "node server.js"
+    "start": "node server.js",
+
+    "db:validate": "prisma validate",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:reset": "prisma migrate reset"
   },
   "keywords": [],
   "author": "",

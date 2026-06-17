@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum Role {
+  Gerente
+  Auxiliar
+  Junior
+  Pleno
+  Senior
+}
+
+enum TicketStatus {
+  Open
+  Closed
+  Progress
+}
+
+model Company {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+  name  String
+  cnpj  String @unique
+
+  departments Department[]
+  users       User[]
+}
+
+model Department {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+
+  companyId Int
+  company   Company @relation(fields: [companyId], references: [id])
+
+  users   User[]
+  tickets Ticket[]
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  name     String
+  password String
+  email    String @unique
+  role     Role
+
+  departmentId Int
+  companyId    Int
+
+  department Department @relation(fields: [departmentId], references: [id])
+  company    Company    @relation(fields: [companyId], references: [id])
+
+  ownedTickets Ticket[]           @relation("TicketOwner")
+  comments     Comment[]
+  assignments  TicketAssignment[]
+}
+
+model Ticket {
+  id          Int          @id @default(autoincrement())
+  title       String
+  description String
+  status      TicketStatus @default(Open)
+
+  opening    DateTime  @default(now())
+  completion DateTime?
+
+  departmentId Int
+  ownerId      Int
+
+  department Department @relation(fields: [departmentId], references: [id])
+  owner      User       @relation("TicketOwner", fields: [ownerId], references: [id])
+
+  comments  Comment[]
+  assignees TicketAssignment[]
+}
+
+model TicketAssignment {
+  ticketId Int
+  userId   Int
+
+  ticket Ticket @relation(fields: [ticketId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@id([ticketId, userId])
+}
+
+model Comment {
+  id          Int     @id @default(autoincrement())
+  description String?
+
+  ticketId Int
+  userId   Int
+
+  ticket Ticket @relation(fields: [ticketId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+}
