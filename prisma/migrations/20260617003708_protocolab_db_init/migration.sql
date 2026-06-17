@@ -1,9 +1,9 @@
 -- CreateTable
 CREATE TABLE `Company` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `email` VARCHAR(191) NOT NULL,
-    `name` VARCHAR(191) NOT NULL,
-    `cnpj` VARCHAR(191) NOT NULL,
+    `email` VARCHAR(45) NOT NULL,
+    `name` VARCHAR(45) NOT NULL,
+    `cnpj` VARCHAR(45) NOT NULL,
 
     UNIQUE INDEX `Company_email_key`(`email`),
     UNIQUE INDEX `Company_cnpj_key`(`cnpj`),
@@ -12,9 +12,9 @@ CREATE TABLE `Company` (
 
 -- CreateTable
 CREATE TABLE `Department` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(191) NOT NULL,
-    `description` VARCHAR(191) NOT NULL,
+    `id` INTEGER NOT NULL,
+    `name` VARCHAR(25) NOT NULL,
+    `description` VARCHAR(80) NOT NULL,
     `companyId` INTEGER NOT NULL,
 
     PRIMARY KEY (`id`)
@@ -22,10 +22,10 @@ CREATE TABLE `Department` (
 
 -- CreateTable
 CREATE TABLE `User` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(191) NOT NULL,
-    `password` VARCHAR(191) NOT NULL,
-    `email` VARCHAR(191) NOT NULL,
+    `id` INTEGER NOT NULL,
+    `name` VARCHAR(45) NOT NULL,
+    `password` VARCHAR(45) NOT NULL,
+    `email` VARCHAR(45) NOT NULL,
     `role` ENUM('Gerente', 'Auxiliar', 'Junior', 'Pleno', 'Senior') NOT NULL,
     `departmentId` INTEGER NOT NULL,
     `companyId` INTEGER NOT NULL,
@@ -36,12 +36,12 @@ CREATE TABLE `User` (
 
 -- CreateTable
 CREATE TABLE `Ticket` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `title` VARCHAR(191) NOT NULL,
-    `description` VARCHAR(191) NOT NULL,
-    `status` ENUM('Open', 'Closed', 'Progress') NOT NULL DEFAULT 'Open',
-    `opening` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `completion` DATETIME(3) NULL,
+    `id` INTEGER NOT NULL,
+    `title` VARCHAR(25) NOT NULL,
+    `description` VARCHAR(80) NOT NULL,
+    `status` ENUM('Open', 'Closed', 'Progress') NOT NULL,
+    `opening` DATE NOT NULL,
+    `completion` DATE NULL,
     `departmentId` INTEGER NOT NULL,
     `ownerId` INTEGER NOT NULL,
 
@@ -58,8 +58,8 @@ CREATE TABLE `TicketAssignment` (
 
 -- CreateTable
 CREATE TABLE `Comment` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `description` VARCHAR(191) NULL,
+    `id` INTEGER NOT NULL,
+    `description` VARCHAR(80) NULL,
     `ticketId` INTEGER NOT NULL,
     `userId` INTEGER NOT NULL,
 

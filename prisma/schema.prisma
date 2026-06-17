@@ -22,18 +22,18 @@ enum TicketStatus {
 
 model Company {
   id    Int    @id @default(autoincrement())
-  email String @unique
-  name  String
-  cnpj  String @unique
+  email String @unique @db.VarChar(45)
+  name  String @db.VarChar(45)
+  cnpj  String @unique @db.VarChar(45)
 
   departments Department[]
   users       User[]
 }
 
 model Department {
-  id          Int    @id @default(autoincrement())
-  name        String
-  description String
+  id          Int    @id
+  name        String @db.VarChar(25)
+  description String @db.VarChar(80)
 
   companyId Int
   company   Company @relation(fields: [companyId], references: [id])
@@ -43,10 +43,10 @@ model Department {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  name     String
-  password String
-  email    String @unique
+  id       Int    @id
+  name     String @db.VarChar(45)
+  password String @db.VarChar(45)
+  email    String @unique @db.VarChar(45)
   role     Role
 
   departmentId Int
@@ -55,19 +55,20 @@ model User {
   department Department @relation(fields: [departmentId], references: [id])
   company    Company    @relation(fields: [companyId], references: [id])
 
-  ownedTickets Ticket[]           @relation("TicketOwner")
+  ownedTickets Ticket[] @relation("TicketOwner")
   comments     Comment[]
   assignments  TicketAssignment[]
 }
 
 model Ticket {
-  id          Int          @id @default(autoincrement())
-  title       String
-  description String
-  status      TicketStatus @default(Open)
+  id          Int    @id
+  title       String @db.VarChar(25)
+  description String @db.VarChar(80)
 
-  opening    DateTime  @default(now())
-  completion DateTime?
+  status TicketStatus
+
+  opening    DateTime  @db.Date
+  completion DateTime? @db.Date
 
   departmentId Int
   ownerId      Int
@@ -90,8 +91,8 @@ model TicketAssignment {
 }
 
 model Comment {
-  id          Int     @id @default(autoincrement())
-  description String?
+  id          Int     @id
+  description String? @db.VarChar(80)
 
   ticketId Int
   userId   Int
