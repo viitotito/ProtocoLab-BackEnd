@@ -6,7 +6,10 @@ import cookieParser from "cookie-parser";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./src/configs/swagger.js";
 
+import authRoutes from "./src/routes/auth.routes.js";
+
 dotenv.config();
+
 const app = express();
 
 app.set("trust proxy", 1);
@@ -25,6 +28,8 @@ app.use(
 );
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.use("/auth", authRoutes);
 
 app.get("/", (req, res) => {
   res.json({
