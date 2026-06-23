@@ -4,7 +4,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
 import swaggerUi from 'swagger-ui-express';
-import swaggerSpec from './src/config/swagger.js';
+import swaggerSpec from './src/configs/swagger.js';
 
 dotenv.config();
 const app = express();
