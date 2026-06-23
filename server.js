@@ -1,11 +1,26 @@
 import express from 'express';
-import swaggerUi from 'swagger-ui-express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
+import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './src/config/swagger.js';
 
+dotenv.config();
 const app = express();
 
+app.set('trust proxy', 1);
+
 app.use(express.json());
+
+app.use(cookieParser());
+
+const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',');
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+}));
 
 app.use(
   '/api-docs',
@@ -13,42 +28,23 @@ app.use(
   swaggerUi.setup(swaggerSpec)
 );
 
-/**
- * @swagger
- * /:
- *   get:
- *     summary: API check
- *     tags:
- *       - default
- *     responses:
- *       200:
- *         description: API is running
- */
 app.get('/', (req, res) => {
-  res.json({ ok: true });
+  res.json({
+    status: 'Server online'
+  });
 });
 
-/**
- * @swagger
- * /test:
- *   get:
- *     summary: Test endpoint
- *     tags:
- *       - test
- *     responses:
- *       200:
- *         description: Test message
- */
-app.get('/test', (req, res) => {
+app.get('/health', (req, res) => {
   res.json({
-    test: 'This is a test endpoint',
+    status: 'ok'
   });
 });
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(
-    `Server rodando em http://localhost:${PORT}`
-  );
+const externalUrl = process.env.EXTERNAL_URL;
+
+const server = app.listen(PORT, () => {
+const baseUrl = externalUrl || `http://localhost:${PORT}`;
+  console.log(`Server rodando em ${baseUrl}`);
 });
