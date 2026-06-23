@@ -11,7 +11,7 @@ router.post('/login', authController.login);
 
 router.post('/refresh', authController.refresh);
 
-router.use(authMiddleware); 
+router.use(authMiddleware);
 
 router.post('/logout', authController.logout);
 

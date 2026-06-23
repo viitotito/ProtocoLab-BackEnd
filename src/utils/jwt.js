@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 export function generateAccessToken(user) {
-    
+
     return jwt.sign(
         {
             sub: user.id,
@@ -17,7 +17,7 @@ export function generateAccessToken(user) {
 }
 
 export function generateRefreshToken(user) {
-    
+
     return jwt.sign(
         {
             sub: user.id,
