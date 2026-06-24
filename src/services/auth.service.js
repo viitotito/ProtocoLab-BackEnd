@@ -1,16 +1,9 @@
 import bcrypt from "bcrypt";
 import prisma from "../configs/prisma.js";
 
-import {
-  generateAccessToken,
-  generateRefreshToken,
-  verifyRefreshToken,
-} from "../utils/jwt.js";
+import {generateAccessToken, generateRefreshToken, verifyRefreshToken} from "../utils/jwt.js";
 
-import {
-  setRefreshCookie,
-  clearRefreshCookie,
-} from "../utils/cookies.js";
+import {setRefreshCookie, clearRefreshCookie} from "../utils/cookies.js";
 
 export async function register(data) {
   const {
@@ -134,23 +127,23 @@ export async function login(data, res) {
 
 export async function refresh(token) {
 
-    if (!token) {
-        throw new Error("Refresh token não informado.");
-    }
+  if (!token) {
+    throw new Error("Refresh token não informado.");
+  }
 
-    const payload = verifyRefreshToken(token);
+  const payload = verifyRefreshToken(token);
 
-    const user = await prisma.user.findUnique({
-        where: {
-            id: payload.sub,
-        },
-    });
+  const user = await prisma.user.findUnique({
+    where: {
+      id: payload.sub,
+    },
+  });
 
-    if (!user) {
-        throw new Error("Usuário inválido.");
-    }
+  if (!user) {
+    throw new Error("Usuário inválido.");
+  }
 
-    return generateAccessToken(user);
+  return generateAccessToken(user);
 }
 
 export async function me(userId) {

@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
+enum Roles {
   Gerente
   Auxiliar
   Junior
@@ -21,17 +21,17 @@ enum TicketStatus {
   Progress
 }
 
-model Company {
+model Companies {
   id    Int    @id @default(autoincrement())
   name  String @db.VarChar(45)
   email String @unique @db.VarChar(45)
   cnpj  String @unique @db.VarChar(45)
 
-  departments Department[]
+  departments Departments[]
   users       User[]
 }
 
-model Department {
+model Departments {
   id          Int    @id @default(autoincrement())
   name        String @db.VarChar(25)
   description String @db.VarChar(80)
@@ -43,7 +43,7 @@ model Department {
   tickets Ticket[]
 }
 
-model User {
+model Users {
   id       Int    @id @default(autoincrement())
   name     String @db.VarChar(45)
   email    String @unique @db.VarChar(45)
@@ -61,7 +61,7 @@ model User {
   assignments  TicketAssignment[]
 }
 
-model Ticket {
+model Tickets {
   id          Int    @id @default(autoincrement())
   title       String @db.VarChar(25)
   description String @db.VarChar(80)
@@ -91,7 +91,7 @@ model TicketAssignment {
   @@id([ticketId, userId])
 }
 
-model Comment {
+model Comments {
   id          Int     @id @default(autoincrement())
   description String? @db.VarChar(80)
 
