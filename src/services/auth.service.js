@@ -1,9 +1,16 @@
 import bcrypt from "bcrypt";
 import prisma from "../configs/prisma.js";
 
-import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../utils/jwt.js";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  verifyRefreshToken,
+} from "../utils/jwt.js";
 
-import { setRefreshCookie, clearRefreshCookie } from "../utils/cookies.js";
+import {
+  setRefreshCookie,
+  clearRefreshCookie,
+} from "../utils/cookies.js";
 
 export async function register(data) {
   const {
@@ -19,57 +26,72 @@ export async function register(data) {
     throw new Error("Senhas não conferem.");
   }
 
-  let company = await prisma.company.findUnique({
-    where: { email: companyEmail },
+  const companyExists = await prisma.company.findFirst({
+    where: {
+      OR: [
+        { email: companyEmail },
+        { cnpj }
+      ]
+    }
   });
 
-  if (!company) {
-    company = await prisma.company.create({
+  if (companyExists) {
+    throw new Error("Empresa já cadastrada.");
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const result = await prisma.$transaction(async (tx) => {
+
+    const company = await tx.company.create({
       data: {
         name: companyName,
         email: companyEmail,
         cnpj,
       },
     });
-  }
 
-  const usersCount = await prisma.user.count({
-    where: { companyId: company.id },
+    const department = await tx.department.create({
+      data: {
+        name: "Administração",
+        description: "Departamento criado automaticamente pelo sistema.",
+        companyId: company.id,
+      },
+    });
+
+    const user = await tx.user.create({
+      data: {
+        name: employeeName,
+        email: companyEmail,
+        password: hashedPassword,
+        role: "Gerente",
+        companyId: company.id,
+        departmentId: department.id,
+      },
+    });
+
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      company: {
+        id: company.id,
+        name: company.name,
+      },
+    };
   });
 
-  const userExists = await prisma.user.findFirst({
-    where: {
-      name: employeeName,
-      companyId: company.id,
-    },
-  });
-
-  if (userExists) {
-    throw new Error("Usuário já existe nessa empresa.");
-  }
-
-  const role = usersCount === 0 ? "Gerente" : "Auxiliar";
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const user = await prisma.user.create({
-    data: {
-      name: employeeName,
-      password: hashedPassword,
-      role,
-      companyId: company.id,
-      departmentId: 1, 
-    },
-  });
-
-  return user;
+  return result;
 }
 
 export async function login(data, res) {
   const { companyEmail, employeeName, password } = data;
 
   const company = await prisma.company.findUnique({
-    where: { email: companyEmail },
+    where: {
+      email: companyEmail,
+    },
   });
 
   if (!company) {
@@ -78,8 +100,8 @@ export async function login(data, res) {
 
   const user = await prisma.user.findFirst({
     where: {
-      name: employeeName,
       companyId: company.id,
+      name: employeeName,
     },
   });
 
@@ -99,33 +121,50 @@ export async function login(data, res) {
   setRefreshCookie(res, refreshToken);
 
   return {
-    user,
     accessToken,
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      companyId: user.companyId,
+    },
   };
 }
 
 export async function refresh(token) {
-  const payload = verifyRefreshToken(token);
 
-  const user = await prisma.user.findUnique({
-    where: { id: payload.id },
-  });
+    if (!token) {
+        throw new Error("Refresh token não informado.");
+    }
 
-  if (!user) {
-    throw new Error("Usuário inválido.");
-  }
+    const payload = verifyRefreshToken(token);
 
-  return generateAccessToken(user);
+    const user = await prisma.user.findUnique({
+        where: {
+            id: payload.sub,
+        },
+    });
+
+    if (!user) {
+        throw new Error("Usuário inválido.");
+    }
+
+    return generateAccessToken(user);
 }
 
 export async function me(userId) {
   return prisma.user.findUnique({
-    where: { id: userId },
+    where: {
+      id: userId,
+    },
     select: {
       id: true,
       name: true,
+      email: true,
       role: true,
       companyId: true,
+      departmentId: true,
     },
   });
 }
@@ -133,5 +172,7 @@ export async function me(userId) {
 export async function logout(res) {
   clearRefreshCookie(res);
 
-  return { message: "Logout realizado com sucesso." };
+  return {
+    message: "Logout realizado com sucesso.",
+  };
 }
