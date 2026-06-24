@@ -28,7 +28,7 @@ model Companies {
   cnpj  String @unique @db.VarChar(45)
 
   departments Departments[]
-  users       User[]
+  users       Users[]
 }
 
 model Departments {
@@ -37,10 +37,10 @@ model Departments {
   description String @db.VarChar(80)
 
   companyId Int
-  company   Company @relation(fields: [companyId], references: [id])
+  company   Companies @relation(fields: [companyId], references: [id])
 
-  users   User[]
-  tickets Ticket[]
+  users   Users[]
+  tickets Tickets[]
 }
 
 model Users {
@@ -48,16 +48,16 @@ model Users {
   name     String @db.VarChar(45)
   email    String @unique @db.VarChar(45)
   password String @db.VarChar(60)
-  role     Role
+  role     Roles
 
   departmentId Int
   companyId    Int
 
-  department Department @relation(fields: [departmentId], references: [id])
-  company    Company    @relation(fields: [companyId], references: [id])
+  department Departments @relation(fields: [departmentId], references: [id])
+  company    Companies    @relation(fields: [companyId], references: [id])
 
-  ownedTickets Ticket[] @relation("TicketOwner")
-  comments     Comment[]
+  ownedTickets Tickets[] @relation("TicketOwner")
+  comments     Comments[]
   assignments  TicketAssignment[]
 }
 
@@ -74,10 +74,10 @@ model Tickets {
   departmentId Int
   ownerId      Int
 
-  department Department @relation(fields: [departmentId], references: [id])
-  owner      User       @relation("TicketOwner", fields: [ownerId], references: [id])
+  department Departments @relation(fields: [departmentId], references: [id])
+  owner      Users       @relation("TicketOwner", fields: [ownerId], references: [id])
 
-  comments  Comment[]
+  comments  Comments[]
   assignees TicketAssignment[]
 }
 
@@ -85,8 +85,8 @@ model TicketAssignment {
   ticketId Int
   userId   Int
 
-  ticket Ticket @relation(fields: [ticketId], references: [id])
-  user   User   @relation(fields: [userId], references: [id])
+  ticket Tickets @relation(fields: [ticketId], references: [id])
+  user   Users   @relation(fields: [userId], references: [id])
 
   @@id([ticketId, userId])
 }
@@ -98,6 +98,6 @@ model Comments {
   ticketId Int
   userId   Int
 
-  ticket Ticket @relation(fields: [ticketId], references: [id])
-  user   User   @relation(fields: [userId], references: [id])
+  ticket Tickets @relation(fields: [ticketId], references: [id])
+  user   Users   @relation(fields: [userId], references: [id])
 }
