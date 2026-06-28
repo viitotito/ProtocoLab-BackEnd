@@ -15,7 +15,7 @@ export async function authMiddleware(req, res, next) {
 
     const payload = verifyAccessToken(token);
 
-    const user = await prisma.users.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id: payload.sub },
       include: {
         department: true,
