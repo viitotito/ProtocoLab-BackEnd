@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 const cnpjRegex = /^\d{14}$/;
+const employeeNameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$/;
 
 export const registerSchema = z
     .object({
@@ -32,7 +33,8 @@ export const registerSchema = z
             })
             .trim()
             .min(3, "Nome deve possuir pelo menos 3 caracteres.")
-            .max(45, "Nome deve possuir no máximo 45 caracteres."),
+            .max(45, "Nome deve possuir no máximo 45 caracteres.")
+            .regex(employeeNameRegex, "Nome deve conter apenas letras e espaços."),
 
         password: z
             .string({
@@ -65,7 +67,8 @@ export const loginSchema = z.object({
         })
         .trim()
         .min(3, "Nome deve possuir pelo menos 3 caracteres.")
-        .max(45, "Nome deve possuir no máximo 45 caracteres."),
+        .max(45, "Nome deve possuir no máximo 45 caracteres.")
+        .regex(employeeNameRegex, "Nome deve conter apenas letras e espaços."),
 
     password: z
         .string({
