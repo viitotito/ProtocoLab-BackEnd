@@ -4,9 +4,9 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'API protocolab',
+      title: 'API ProtocoLab',
       version: '1.0.0',
-      description: 'Protocolab Documentation',
+      description: 'Documentação ProtocoLab',
     },
 
     servers: [

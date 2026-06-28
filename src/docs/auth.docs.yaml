@@ -1,5 +1,4 @@
 paths:
-
   /api/auth/register:
     post:
       summary: Cria uma empresa e o primeiro usuário (Gerente)

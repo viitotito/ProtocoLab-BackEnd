@@ -1,7 +1,5 @@
 components:
-
   schemas:
-
     MessageResponse:
       type: object
       properties:
