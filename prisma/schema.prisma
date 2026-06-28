@@ -7,61 +7,54 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Roles {
-  Gerente
-  Auxiliar
-  Junior
-  Pleno
-  Senior
-}
-
 enum TicketStatus {
   Open
   Closed
   Progress
 }
 
-model Companies {
+model Company {
   id    Int    @id @default(autoincrement())
-  name  String @db.VarChar(45)
   email String @unique @db.VarChar(45)
+  name  String @db.VarChar(45)
   cnpj  String @unique @db.VarChar(45)
 
-  departments Departments[]
-  users       Users[]
+  departments Department[]
+  users       User[]
 }
 
-model Departments {
+model Department {
   id          Int    @id @default(autoincrement())
   name        String @db.VarChar(25)
   description String @db.VarChar(80)
 
   companyId Int
-  company   Companies @relation(fields: [companyId], references: [id])
+  company   Company @relation(fields: [companyId], references: [id])
 
-  users   Users[]
-  tickets Tickets[]
+  users   User[]
+  tickets Ticket[]
 }
 
-model Users {
+model User {
   id       Int    @id @default(autoincrement())
   name     String @db.VarChar(45)
   email    String @unique @db.VarChar(45)
   password String @db.VarChar(60)
-  role     Roles
+
+  role String @db.VarChar(20)
 
   departmentId Int
   companyId    Int
 
-  department Departments @relation(fields: [departmentId], references: [id])
-  company    Companies    @relation(fields: [companyId], references: [id])
+  department Department @relation(fields: [departmentId], references: [id])
+  company    Company    @relation(fields: [companyId], references: [id])
 
-  ownedTickets Tickets[] @relation("TicketOwner")
-  comments     Comments[]
+  ownedTickets Ticket[] @relation("TicketOwner")
+  comments     Comment[]
   assignments  TicketAssignment[]
 }
 
-model Tickets {
+model Ticket {
   id          Int    @id @default(autoincrement())
   title       String @db.VarChar(25)
   description String @db.VarChar(80)
@@ -74,10 +67,10 @@ model Tickets {
   departmentId Int
   ownerId      Int
 
-  department Departments @relation(fields: [departmentId], references: [id])
-  owner      Users       @relation("TicketOwner", fields: [ownerId], references: [id])
+  department Department @relation(fields: [departmentId], references: [id])
+  owner      User       @relation("TicketOwner", fields: [ownerId], references: [id])
 
-  comments  Comments[]
+  comments  Comment[]
   assignees TicketAssignment[]
 }
 
@@ -85,19 +78,19 @@ model TicketAssignment {
   ticketId Int
   userId   Int
 
-  ticket Tickets @relation(fields: [ticketId], references: [id])
-  user   Users   @relation(fields: [userId], references: [id])
+  ticket Ticket @relation(fields: [ticketId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
 
   @@id([ticketId, userId])
 }
 
-model Comments {
+model Comment {
   id          Int     @id @default(autoincrement())
   description String? @db.VarChar(80)
 
   ticketId Int
   userId   Int
 
-  ticket Tickets @relation(fields: [ticketId], references: [id])
-  user   Users   @relation(fields: [userId], references: [id])
+  ticket Ticket @relation(fields: [ticketId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
 }
