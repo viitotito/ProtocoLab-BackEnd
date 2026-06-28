@@ -21,6 +21,8 @@ model Company {
 
   departments Department[]
   users       User[]
+
+  @@map("companies")
 }
 
 model Department {
@@ -33,6 +35,8 @@ model Department {
 
   users   User[]
   tickets Ticket[]
+
+  @@map("departments")
 }
 
 model User {
@@ -40,8 +44,7 @@ model User {
   name     String @db.VarChar(45)
   email    String @unique @db.VarChar(45)
   password String @db.VarChar(60)
-
-  role String @db.VarChar(20)
+  role     String @db.VarChar(20)
 
   departmentId Int
   companyId    Int
@@ -52,6 +55,8 @@ model User {
   ownedTickets Ticket[] @relation("TicketOwner")
   comments     Comment[]
   assignments  TicketAssignment[]
+
+  @@map("users")
 }
 
 model Ticket {
@@ -62,7 +67,7 @@ model Ticket {
   status TicketStatus
 
   opening    DateTime  @db.Date
-  completion DateTime? @db.Date
+  completion DateTime?
 
   departmentId Int
   ownerId      Int
@@ -72,6 +77,8 @@ model Ticket {
 
   comments  Comment[]
   assignees TicketAssignment[]
+
+  @@map("tickets")
 }
 
 model TicketAssignment {
@@ -82,6 +89,8 @@ model TicketAssignment {
   user   User   @relation(fields: [userId], references: [id])
 
   @@id([ticketId, userId])
+
+  @@map("ticket_assignments")
 }
 
 model Comment {
@@ -93,4 +102,6 @@ model Comment {
 
   ticket Ticket @relation(fields: [ticketId], references: [id])
   user   User   @relation(fields: [userId], references: [id])
+
+  @@map("comments")
 }

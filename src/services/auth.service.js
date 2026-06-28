@@ -12,7 +12,7 @@ export async function register(data) {
     password,
   } = data;
 
-  const companyExists = await prisma.companies.findFirst({
+  const companyExists = await prisma.company.findFirst({
     where: {
       OR: [
         { email: companyEmail },
@@ -28,7 +28,7 @@ export async function register(data) {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const result = await prisma.$transaction(async (tx) => {
-    const company = await tx.companies.create({
+    const company = await tx.company.create({
       data: {
         name: companyName,
         email: companyEmail,
@@ -36,7 +36,7 @@ export async function register(data) {
       },
     });
 
-    const department = await tx.departments.create({
+    const department = await tx.department.create({
       data: {
         name: "Administração",
         description: "Departamento padrão do sistema.",
@@ -44,7 +44,7 @@ export async function register(data) {
       },
     });
 
-    const user = await tx.users.create({
+    const user = await tx.user.create({
       data: {
         name: employeeName,
         email: companyEmail,
@@ -73,7 +73,7 @@ export async function register(data) {
 export async function login(data, res) {
   const { companyEmail, employeeName, password } = data;
 
-  const company = await prisma.companies.findUnique({
+  const company = await prisma.company.findUnique({
     where: { email: companyEmail },
   });
 
@@ -81,7 +81,7 @@ export async function login(data, res) {
     throw new Error("Credenciais inválidas.");
   }
 
-  const user = await prisma.users.findFirst({
+  const user = await prisma.user.findFirst({
     where: {
       companyId: company.id,
       name: employeeName,
@@ -120,7 +120,7 @@ export async function refresh(token) {
 
   const payload = verifyRefreshToken(token);
 
-  const user = await prisma.users.findUnique({
+  const user = await prisma.user.findUnique({
     where: { id: payload.sub },
   });
 
@@ -130,7 +130,7 @@ export async function refresh(token) {
 }
 
 export async function me(userId) {
-  const user = await prisma.users.findUnique({
+  const user = await prisma.user.findUnique({
     where: { id: userId },
     select: {
       id: true,
