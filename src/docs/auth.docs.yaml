@@ -1,0 +1,212 @@
+paths:
+
+  /api/auth/register:
+    post:
+      summary: Cria uma empresa e o primeiro usuário (Gerente)
+      tags:
+        - Auth
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - companyName
+                - companyEmail
+                - cnpj
+                - employeeName
+                - password
+                - confirmPassword
+              properties:
+                companyName:
+                  type: string
+                  example: ProtoCoLab
+                companyEmail:
+                  type: string
+                  format: email
+                  example: contato@protocolab.com
+                cnpj:
+                  type: string
+                  example: "12345678000199"
+                employeeName:
+                  type: string
+                  example: João Silva
+                password:
+                  type: string
+                  example: senha123
+                confirmPassword:
+                  type: string
+                  example: senha123
+
+      responses:
+        "201":
+          description: Empresa cadastrada com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Empresa cadastrada com sucesso.
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: João Silva
+                      email:
+                        type: string
+                        example: contato@protocolab.com
+                      role:
+                        type: string
+                        example: Gerente
+                      company:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          name:
+                            type: string
+                            example: ProtoCoLab
+
+        "400":
+          description: Erro de validação ou regra de negócio.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+  /api/auth/login:
+    post:
+      summary: Realiza login do usuário.
+      tags:
+        - Auth
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - companyEmail
+                - employeeName
+                - password
+              properties:
+                companyEmail:
+                  type: string
+                  format: email
+                  example: contato@protocolab.com
+                employeeName:
+                  type: string
+                  example: João Silva
+                password:
+                  type: string
+                  example: senha123
+
+      responses:
+        "200":
+          description: Login realizado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Login realizado com sucesso.
+                  accessToken:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIs...
+                  user:
+                    $ref: "#/components/schemas/User"
+
+        "401":
+          description: Credenciais inválidas.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+
+  /api/auth/refresh:
+    post:
+      summary: Gera um novo Access Token utilizando o Refresh Token.
+      tags:
+        - Auth
+
+      responses:
+        "200":
+          description: Token atualizado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Token atualizado com sucesso.
+                  accessToken:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIs...
+
+        "401":
+          description: Refresh Token inválido ou expirado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+
+  /api/auth/me:
+    get:
+      summary: Retorna os dados do usuário autenticado.
+      tags:
+        - Auth
+
+      security:
+        - bearerAuth: []
+
+      responses:
+        "200":
+          description: Dados do usuário autenticado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+        "401":
+          description: Token inválido ou expirado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+
+  /api/auth/logout:
+    post:
+      summary: Realiza logout do usuário autenticado.
+      tags:
+        - Auth
+
+      security:
+        - bearerAuth: []
+
+      responses:
+        "200":
+          description: Logout realizado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+        "401":
+          description: Token inválido ou usuário não autenticado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"

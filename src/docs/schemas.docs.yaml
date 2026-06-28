@@ -1,0 +1,56 @@
+components:
+
+  schemas:
+
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+
+    ValidationError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Erro de validação.
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+
+    Unauthorized:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Token de acesso inválido ou expirado.
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+
+        name:
+          type: string
+          example: João Silva
+
+        email:
+          type: string
+          example: contato@protocolab.com
+
+        role:
+          type: string
+          example: Gerente
+
+        companyId:
+          type: integer
+          example: 1
+
+        departmentId:
+          type: integer
+          example: 1

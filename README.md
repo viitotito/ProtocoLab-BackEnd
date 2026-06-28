@@ -72,13 +72,13 @@ Atualiza o cliente Prisma utilizado pela aplicação.
 Após alterar o schema do banco:
 
 ```bash
-npm run db:migrate -- --name nome_da_alteracao
+npm run db:migrate 
 ```
 
 Exemplo:
 
 ```bash
-npm run db:migrate -- --name add_comments
+npm run db:migrate campo_telefone
 ```
 
 ### Aplicar Migrations Existentes

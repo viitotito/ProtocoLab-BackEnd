@@ -8,14 +8,25 @@ const options = {
       version: '1.0.0',
       description: 'Protocolab Documentation',
     },
+
     servers: [
       {
         url: 'http://localhost:3000',
       },
     ],
+
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
   },
 
-  apis: ['./src/**/*.js', './**/*.js'],
+  apis: ["./src/docs/**/*.yaml"],
 };
 
 const swaggerSpec = swaggerJsdoc(options);
