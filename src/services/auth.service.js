@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
 import prisma from "../configs/prisma.js";
 
-import {generateAccessToken, generateRefreshToken, verifyRefreshToken} from "../utils/jwt.js";
+import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../utils/jwt.js";
 
-import {setRefreshCookie, clearRefreshCookie} from "../utils/cookies.js";
+import { setRefreshCookie, clearRefreshCookie } from "../utils/cookies.js";
 
 export async function register(data) {
   const {
@@ -12,31 +12,42 @@ export async function register(data) {
     cnpj,
     employeeName,
     password,
-    confirmPassword,
   } = data;
 
-  if (password !== confirmPassword) {
-    throw new Error("Senhas não conferem.");
-  }
-
-  const companyExists = await prisma.company.findFirst({
+  const companyEmailExists = await prisma.companies.findUnique({
     where: {
-      OR: [
-        { email: companyEmail },
-        { cnpj }
-      ]
-    }
+      email: companyEmail,
+    },
   });
 
-  if (companyExists) {
-    throw new Error("Empresa já cadastrada.");
+  if (companyEmailExists) {
+    throw new Error("Já existe uma empresa com este e-mail.");
+  }
+
+  const companyCnpjExists = await prisma.companies.findUnique({
+    where: {
+      cnpj,
+    },
+  });
+
+  if (companyCnpjExists) {
+    throw new Error("Já existe uma empresa com este CNPJ.");
+  }
+
+  const userExists = await prisma.users.findUnique({
+    where: {
+      email: companyEmail,
+    },
+  });
+
+  if (userExists) {
+    throw new Error("Já existe um usuário com este e-mail.");
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const result = await prisma.$transaction(async (tx) => {
-
-    const company = await tx.company.create({
+    const company = await tx.companies.create({
       data: {
         name: companyName,
         email: companyEmail,
@@ -44,7 +55,7 @@ export async function register(data) {
       },
     });
 
-    const department = await tx.department.create({
+    const department = await tx.departments.create({
       data: {
         name: "Administração",
         description: "Departamento criado automaticamente pelo sistema.",
@@ -52,7 +63,7 @@ export async function register(data) {
       },
     });
 
-    const user = await tx.user.create({
+    const user = await tx.users.create({
       data: {
         name: employeeName,
         email: companyEmail,
@@ -81,7 +92,7 @@ export async function register(data) {
 export async function login(data, res) {
   const { companyEmail, employeeName, password } = data;
 
-  const company = await prisma.company.findUnique({
+  const company = await prisma.companies.findUnique({
     where: {
       email: companyEmail,
     },
@@ -91,7 +102,7 @@ export async function login(data, res) {
     throw new Error("Empresa não encontrada.");
   }
 
-  const user = await prisma.user.findFirst({
+  const user = await prisma.users.findFirst({
     where: {
       companyId: company.id,
       name: employeeName,
@@ -126,14 +137,13 @@ export async function login(data, res) {
 }
 
 export async function refresh(token) {
-
   if (!token) {
     throw new Error("Refresh token não informado.");
   }
 
   const payload = verifyRefreshToken(token);
 
-  const user = await prisma.user.findUnique({
+  const user = await prisma.users.findUnique({
     where: {
       id: payload.sub,
     },
@@ -147,7 +157,7 @@ export async function refresh(token) {
 }
 
 export async function me(userId) {
-  return prisma.user.findUnique({
+  const user = await prisma.users.findUnique({
     where: {
       id: userId,
     },
@@ -160,6 +170,12 @@ export async function me(userId) {
       departmentId: true,
     },
   });
+
+  if (!user) {
+    throw new Error("Usuário não encontrado.");
+  }
+
+  return user;
 }
 
 export async function logout(res) {
