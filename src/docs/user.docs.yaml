@@ -1,7 +1,7 @@
 paths:
   /api/users:
     get:
-      summary: Retorna os usuários cadastrados
+      summary: Lista usuários da empresa
       tags:
         - Users
 
@@ -10,7 +10,7 @@ paths:
 
       responses:
         "200":
-          description: Lista de usuários cadastrados na empresa
+          description: Lista de usuários
           content:
             application/json:
               schema:
@@ -24,3 +24,159 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Unauthorized"
+
+    post:
+      summary: Cria um novo usuário (somente admin)
+      tags:
+        - Users
+
+      security:
+        - bearerAuth: []
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+                - role
+                - departmentId
+              properties:
+                name:
+                  type: string
+                  example: João Silva
+
+                email:
+                  type: string
+                  example: joao@email.com
+
+                password:
+                  type: string
+                  example: senha123
+
+                role:
+                  type: string
+                  example: GERENTE
+
+                departmentId:
+                  type: integer
+                  example: 1
+
+      responses:
+        "201":
+          description: Usuário criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+        "400":
+          description: Erro de validação ou regra de negócio
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+        "403":
+          description: Sem permissão
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+
+  /api/users/{id}:
+    get:
+      summary: Busca usuário por ID
+      tags:
+        - Users
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        "200":
+          description: Usuário encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+        "404":
+          description: Usuário não encontrado
+
+    put:
+      summary: Atualiza usuário
+      tags:
+        - Users
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+
+                email:
+                  type: string
+
+                password:
+                  type: string
+
+                role:
+                  type: string
+
+                departmentId:
+                  type: integer
+
+      responses:
+        "200":
+          description: Usuário atualizado com sucesso
+
+        "400":
+          description: Erro de validação
+
+    delete:
+      summary: Remove usuário
+      tags:
+        - Users
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        "200":
+          description: Usuário deletado com sucesso
+
+        "404":
+          description: Usuário não encontrado

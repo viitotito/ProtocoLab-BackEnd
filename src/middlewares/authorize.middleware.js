@@ -6,16 +6,13 @@ export function authorize() {
       });
     }
 
-    const role = (req.user.role || "").toLowerCase();
-    const department = (req.user.departmentName || "").toLowerCase();
+    const role = (req.user.role || "").toLowerCase().trim();
+    const department = (req.user.departmentName || "").toLowerCase().trim();
 
-    const isAdminDepartment =
-      department === "administração".toLowerCase();
+    const isAdminDepartment = department === "administração";
+    const isManager = role === "gerente";
 
-    const isManager =
-      role === "gerente".toLowerCase();
-
-    if (!isAdminDepartment || !isManager) {
+    if (!(isAdminDepartment && isManager)) {
       return res.status(403).json({
         message:
           "Acesso permitido apenas para usuários do departamento de Administração com cargo de Gerente.",
