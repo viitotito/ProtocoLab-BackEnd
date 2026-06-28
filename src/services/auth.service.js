@@ -99,7 +99,7 @@ export async function login(data, res) {
   });
 
   if (!company) {
-    throw new Error("Empresa não encontrada.");
+    throw new Error("Credenciais inválidas.");
   }
 
   const user = await prisma.users.findFirst({
@@ -110,13 +110,13 @@ export async function login(data, res) {
   });
 
   if (!user) {
-    throw new Error("Usuário não encontrado.");
+    throw new Error("Credenciais inválidas.");
   }
 
   const passwordMatch = await bcrypt.compare(password, user.password);
 
   if (!passwordMatch) {
-    throw new Error("Senha inválida.");
+    throw new Error("Credenciais inválidas.");
   }
 
   const accessToken = generateAccessToken(user);
@@ -150,7 +150,7 @@ export async function refresh(token) {
   });
 
   if (!user) {
-    throw new Error("Usuário inválido.");
+    throw new Error("Usuário não encontrado.");
   }
 
   return generateAccessToken(user);
