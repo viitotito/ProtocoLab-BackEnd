@@ -3,47 +3,74 @@ import { z } from "zod";
 export const createUserSchema = z.object({
   name: z
     .string({
-      required_error: "Nome é obrigatório.",
+      required_error: "O nome do usuário é obrigatório.",
     })
-    .min(3, "Nome deve ter pelo menos 3 caracteres.")
-    .max(45, "Nome deve ter no máximo 45 caracteres."),
+    .trim()
+    .min(3, "O nome deve ter no mínimo 3 caracteres.")
+    .max(45, "O nome deve ter no máximo 45 caracteres."),
 
   email: z
     .string({
-      required_error: "Email é obrigatório.",
+      required_error: "O e-mail do usuário é obrigatório.",
     })
-    .email("Email inválido.")
-    .max(45, "Email deve ter no máximo 45 caracteres."),
+    .trim()
+    .email("Informe um e-mail válido.")
+    .max(45, "O e-mail deve ter no máximo 45 caracteres."),
 
   password: z
     .string({
-      required_error: "Senha é obrigatória.",
+      required_error: "A senha é obrigatória.",
     })
-    .min(8, "Senha deve ter pelo menos 8 caracteres.")
-    .max(72, "Senha deve ter no máximo 72 caracteres."),
+    .trim()
+    .min(8, "A senha deve ter no mínimo 8 caracteres.")
+    .max(72, "A senha deve ter no máximo 72 caracteres."),
 
   role: z
     .string({
-      required_error: "Role é obrigatória.",
+      required_error: "O papel (role) do usuário é obrigatório.",
     })
-    .min(3)
-    .max(20),
+    .trim()
+    .min(3, "O papel deve ter no mínimo 3 caracteres.")
+    .max(20, "O papel deve ter no máximo 20 caracteres."),
 
   departmentId: z
     .number({
-      required_error: "DepartmentId é obrigatório.",
+      required_error: "O departamento é obrigatório.",
     })
-    .int("DepartmentId deve ser um número inteiro."),
+    .int("O ID do departamento deve ser um número inteiro."),
 });
 
 export const updateUserSchema = z.object({
-  name: z.string().min(3).max(45).optional(),
+  name: z
+    .string()
+    .trim()
+    .min(3, "O nome deve ter no mínimo 3 caracteres.")
+    .max(45, "O nome deve ter no máximo 45 caracteres.")
+    .optional(),
 
-  email: z.string().email().max(45).optional(),
+  email: z
+    .string()
+    .trim()
+    .email("Informe um e-mail válido.")
+    .max(45, "O e-mail deve ter no máximo 45 caracteres.")
+    .optional(),
 
-  password: z.string().min(8).max(72).optional(),
+  password: z
+    .string()
+    .trim()
+    .min(8, "A senha deve ter no mínimo 8 caracteres.")
+    .max(72, "A senha deve ter no máximo 72 caracteres.")
+    .optional(),
 
-  role: z.string().min(3).max(20).optional(),
+  role: z
+    .string()
+    .trim()
+    .min(3, "O papel deve ter no mínimo 3 caracteres.")
+    .max(20, "O papel deve ter no máximo 20 caracteres.")
+    .optional(),
 
-  departmentId: z.number().int().optional(),
+  departmentId: z
+    .number()
+    .int("O ID do departamento deve ser um número inteiro.")
+    .optional(),
 });

@@ -43,7 +43,7 @@ components:
 
         role:
           type: string
-          example: Gerente
+          example: Admin
 
         companyId:
           type: integer

@@ -33,24 +33,19 @@ export async function createUser(req, res) {
   }
 }
 
-export async function updateUser(req, res) {
+export const updateUser = async (req, res) => {
   try {
-    const updated = await userService.updateUser(
+    const user = await userService.updateUser(
       Number(req.params.id),
       req.user.companyId,
       req.body
     );
 
-    return res.json({
-      message: "Usuário atualizado com sucesso.",
-      user: updated,
-    });
+    return res.json(user);
   } catch (err) {
-    return res.status(400).json({
-      message: err.message,
-    });
+    return res.status(400).json({ message: err.message });
   }
-}
+};
 
 export async function deleteUser(req, res) {
   try {

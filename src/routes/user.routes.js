@@ -1,10 +1,15 @@
 import express from "express";
+
 import * as userController from "../controllers/user.controller.js";
+
 import { authMiddleware } from "../middlewares/auth.middleware.js";
+
 import { authorize } from "../middlewares/authorize.middleware.js";
+
 import { validate } from "../middlewares/validation.middleware.js";
 
 import { createUserSchema, updateUserSchema } from "../validations/user.validation.js";
+
 const router = express.Router();
 
 router.use(authMiddleware);
@@ -16,6 +21,12 @@ router.post(
     userController.createUser
 );
 
+router.patch(
+    "/:id",
+    validate(updateUserSchema),
+    userController.updateUser
+);
+
 router.get(
     "/",
     userController.listUsers
@@ -24,12 +35,6 @@ router.get(
 router.get(
     "/:id",
     userController.getUser
-);
-
-router.put(
-    "/:id",
-    validate(updateUserSchema),
-    userController.updateUser
 );
 
 router.delete(

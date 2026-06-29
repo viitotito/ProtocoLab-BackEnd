@@ -38,7 +38,7 @@ export async function register(data) {
 
     const department = await tx.department.create({
       data: {
-        name: "Administração",
+        name: "RH",
         description: "Departamento padrão do sistema.",
         companyId: company.id,
       },
@@ -49,7 +49,7 @@ export async function register(data) {
         name: employeeName,
         email: companyEmail,
         password: hashedPassword,
-        role: "Gerente",
+        role: "Admin",
         companyId: company.id,
         departmentId: department.id,
       },

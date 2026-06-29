@@ -8,9 +8,9 @@ datasource db {
 }
 
 enum TicketStatus {
-  Open
-  Closed
-  Progress
+  OPEN
+  IN_PROGRESS
+  CLOSED
 }
 
 model Company {
@@ -31,7 +31,7 @@ model Department {
   description String @db.VarChar(80)
 
   companyId Int
-  company   Company @relation(fields: [companyId], references: [id])
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
   users   User[]
   tickets Ticket[]
@@ -42,20 +42,21 @@ model Department {
 model User {
   id       Int    @id @default(autoincrement())
   name     String @db.VarChar(45)
-  email    String @unique @db.VarChar(45)
+  email    String @db.VarChar(45)
   password String @db.VarChar(60)
   role     String @db.VarChar(20)
 
   departmentId Int
   companyId    Int
 
-  department Department @relation(fields: [departmentId], references: [id])
-  company    Company    @relation(fields: [companyId], references: [id])
+  department Department @relation(fields: [departmentId], references: [id], onDelete: Restrict)
+  company    Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
   ownedTickets Ticket[] @relation("TicketOwner")
   comments     Comment[]
   assignments  TicketAssignment[]
 
+  @@unique([email, companyId])
   @@map("users")
 }
 
@@ -64,16 +65,16 @@ model Ticket {
   title       String @db.VarChar(25)
   description String @db.VarChar(80)
 
-  status TicketStatus
+  status TicketStatus @default(OPEN)
 
-  opening    DateTime  @db.Date
+  opening    DateTime @default(now())
   completion DateTime?
 
   departmentId Int
   ownerId      Int
 
-  department Department @relation(fields: [departmentId], references: [id])
-  owner      User       @relation("TicketOwner", fields: [ownerId], references: [id])
+  department Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  owner      User       @relation("TicketOwner", fields: [ownerId], references: [id], onDelete: Restrict)
 
   comments  Comment[]
   assignees TicketAssignment[]
@@ -85,8 +86,8 @@ model TicketAssignment {
   ticketId Int
   userId   Int
 
-  ticket Ticket @relation(fields: [ticketId], references: [id])
-  user   User   @relation(fields: [userId], references: [id])
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([ticketId, userId])
 
@@ -94,14 +95,14 @@ model TicketAssignment {
 }
 
 model Comment {
-  id          Int     @id @default(autoincrement())
-  description String? @db.VarChar(80)
+  id          Int    @id @default(autoincrement())
+  description String @db.VarChar(80)
 
   ticketId Int
   userId   Int
 
-  ticket Ticket @relation(fields: [ticketId], references: [id])
-  user   User   @relation(fields: [userId], references: [id])
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("comments")
 }

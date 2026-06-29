@@ -60,7 +60,7 @@ paths:
 
                 role:
                   type: string
-                  example: GERENTE
+                  example: Admin
 
                 departmentId:
                   type: integer
@@ -115,8 +115,8 @@ paths:
         "404":
           description: Usuário não encontrado
 
-    put:
-      summary: Atualiza usuário
+    patch:
+      summary: Atualiza dados do usuário
       tags:
         - Users
 

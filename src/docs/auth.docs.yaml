@@ -1,7 +1,7 @@
 paths:
   /api/auth/register:
     post:
-      summary: Cria uma empresa e o primeiro usuário (Gerente)
+      summary: Cria uma empresa e o primeiro usuário (Admin)
       tags:
         - Auth
 
@@ -64,7 +64,7 @@ paths:
                         example: contato@protocolab.com
                       role:
                         type: string
-                        example: Gerente
+                        example: Admin
                       company:
                         type: object
                         properties:

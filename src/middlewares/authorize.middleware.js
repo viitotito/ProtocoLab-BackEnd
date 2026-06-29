@@ -1,21 +1,14 @@
 export function authorize() {
   return (req, res, next) => {
-    if (!req.user) {
-      return res.status(401).json({
-        message: "Usuário não autenticado.",
-      });
-    }
+    const role = req.user.role?.toUpperCase();
 
-    const role = (req.user.role || "").toLowerCase().trim();
-    const department = (req.user.departmentName || "").toLowerCase().trim();
+    const allowedRoles = ["ADMIN", "GERENTE"];
+    const isRH = req.user.departmentId === 1;
 
-    const isAdminDepartment = department === "administração";
-    const isManager = role === "gerente";
-
-    if (!(isAdminDepartment && isManager)) {
+    if (!(isRH || allowedRoles.includes(role))) {
       return res.status(403).json({
         message:
-          "Acesso permitido apenas para usuários do departamento de Administração com cargo de Gerente.",
+          "Acesso permitido apenas para o departamento de RH, com perfis de Admin ou Gerente.",
       });
     }
 
