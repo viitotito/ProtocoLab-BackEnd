@@ -1,73 +1,75 @@
 import { z } from "zod";
 
-export const createTicketSchema = z.object({
-  title: z
-    .string({
-      required_error: "O título do chamado é obrigatório.",
-    })
-    .trim()
-    .min(3, "O título deve ter no mínimo 3 caracteres.")
-    .max(25, "O título deve ter no máximo 25 caracteres."),
-
-  description: z
-    .string({
-      required_error: "A descrição do chamado é obrigatória.",
-    })
-    .trim()
-    .min(5, "A descrição deve ter no mínimo 5 caracteres.")
-    .max(80, "A descrição deve ter no máximo 80 caracteres."),
-
-  departmentId: z
-    .number({
-      required_error: "O departamento é obrigatório.",
-    })
-    .int("O ID do departamento deve ser um número inteiro."),
-
-  priority: z.enum(["HIGH", "NORMAL", "LOW"], {
-    required_error: "A prioridade é obrigatória.",
-    errorMap: () => ({
-      message: "Prioridade inválida.",
-    }),
-  }),
-});
-
-export const updateTicketSchema = z
-  .object({
+export const createTicketSchema = (t) =>
+  z.object({
     title: z
-      .string()
+      .string({
+        required_error: t("ticket:title.required"),
+      })
       .trim()
-      .min(3, "O título deve ter no mínimo 3 caracteres.")
-      .max(25, "O título deve ter no máximo 25 caracteres.")
-      .optional(),
+      .min(3, t("ticket:title.min"))
+      .max(25, t("ticket:title.max")),
 
     description: z
-      .string()
+      .string({
+        required_error: t("ticket:description.required"),
+      })
       .trim()
-      .min(5, "A descrição deve ter no mínimo 5 caracteres.")
-      .max(80, "A descrição deve ter no máximo 80 caracteres.")
-      .optional(),
-
-    status: z
-      .enum(["OPEN", "IN_PROGRESS", "CLOSED"], {
-        errorMap: () => ({
-          message: "Status inválido.",
-        }),
-      })
-      .optional(),
-
-    priority: z
-      .enum(["HIGH", "NORMAL", "LOW"], {
-        errorMap: () => ({
-          message: "Prioridade inválida.",
-        }),
-      })
-      .optional(),
+      .min(5, t("ticket:description.min"))
+      .max(80, t("ticket:description.max")),
 
     departmentId: z
-      .number()
-      .int("O ID do departamento deve ser um número inteiro.")
-      .optional(),
-  })
-  .refine((data) => Object.keys(data).length > 0, {
-    message: "Informe pelo menos um campo para atualização.",
+      .number({
+        required_error: t("ticket:department.required"),
+      })
+      .int(t("ticket:department.invalid")),
+
+    priority: z.enum(["HIGH", "NORMAL", "LOW"], {
+      required_error: t("ticket:priority.required"),
+      errorMap: () => ({
+        message: t("ticket:priority.invalid"),
+      }),
+    }),
   });
+
+export const updateTicketSchema = (t) =>
+  z
+    .object({
+      title: z
+        .string()
+        .trim()
+        .min(3, t("ticket:title.min"))
+        .max(25, t("ticket:title.max"))
+        .optional(),
+
+      description: z
+        .string()
+        .trim()
+        .min(5, t("ticket:description.min"))
+        .max(80, t("ticket:description.max"))
+        .optional(),
+
+      status: z
+        .enum(["OPEN", "IN_PROGRESS", "CLOSED"], {
+          errorMap: () => ({
+            message: t("ticket:status.invalid"),
+          }),
+        })
+        .optional(),
+
+      priority: z
+        .enum(["HIGH", "NORMAL", "LOW"], {
+          errorMap: () => ({
+            message: t("ticket:priority.invalid"),
+          }),
+        })
+        .optional(),
+
+      departmentId: z
+        .number()
+        .int(t("ticket:department.invalid"))
+        .optional(),
+    })
+    .refine((data) => Object.keys(data).length > 0, {
+      message: t("ticket:update.empty"),
+    });

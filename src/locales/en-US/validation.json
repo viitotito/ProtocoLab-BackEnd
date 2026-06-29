@@ -75,5 +75,37 @@
 			"min": "Description must be at least 5 characters.",
 			"max": "Description must be at most 80 characters."
 		}
+	},
+
+	"ticket": {
+		"title": {
+			"required": "Ticket title is required.",
+			"min": "Title must be at least 3 characters.",
+			"max": "Title must be at most 25 characters."
+		},
+
+		"description": {
+			"required": "Ticket description is required.",
+			"min": "Description must be at least 5 characters.",
+			"max": "Description must be at most 80 characters."
+		},
+
+		"department": {
+			"required": "Department is required.",
+			"invalid": "Department ID must be an integer."
+		},
+
+		"priority": {
+			"required": "Priority is required.",
+			"invalid": "Invalid priority."
+		},
+
+		"status": {
+			"invalid": "Invalid status."
+		},
+
+		"update": {
+			"empty": "Provide at least one field to update."
+		}
 	}
 }

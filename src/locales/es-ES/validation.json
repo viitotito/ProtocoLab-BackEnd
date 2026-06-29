@@ -75,5 +75,37 @@
 			"min": "La descripción debe tener al menos 5 caracteres.",
 			"max": "La descripción debe tener como máximo 80 caracteres."
 		}
+	},
+
+	"ticket": {
+		"title": {
+			"required": "El título del ticket es obligatorio.",
+			"min": "El título debe tener al menos 3 caracteres.",
+			"max": "El título debe tener como máximo 25 caracteres."
+		},
+
+		"description": {
+			"required": "La descripción del ticket es obligatoria.",
+			"min": "La descripción debe tener al menos 5 caracteres.",
+			"max": "La descripción debe tener como máximo 80 caracteres."
+		},
+
+		"department": {
+			"required": "El departamento es obligatorio.",
+			"invalid": "El ID del departamento debe ser un número entero."
+		},
+
+		"priority": {
+			"required": "La prioridad es obligatoria.",
+			"invalid": "Prioridad inválida."
+		},
+
+		"status": {
+			"invalid": "Estado inválido."
+		},
+
+		"update": {
+			"empty": "Debe informar al menos un campo para actualizar."
+		}
 	}
 }
