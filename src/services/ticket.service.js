@@ -1,7 +1,7 @@
 import prisma from "../configs/prisma.js";
 
 export async function createTicket(companyId, ownerId, data) {
-  const { title, description, departmentId } = data;
+  const { title, description, departmentId, priority } = data;
 
   const department = await prisma.department.findFirst({
     where: {
@@ -20,12 +20,14 @@ export async function createTicket(companyId, ownerId, data) {
       description,
       ownerId,
       departmentId,
+      priority, 
     },
     select: {
       id: true,
       title: true,
       description: true,
       status: true,
+      priority: true, 
       opening: true,
       completion: true,
 
@@ -98,6 +100,7 @@ export async function getTicketById(id, companyId) {
       title: true,
       description: true,
       status: true,
+      priority: true,
       opening: true,
       completion: true,
 

@@ -95,6 +95,14 @@ components:
             - CLOSED
           example: OPEN
 
+        priority:
+          type: string
+          enum:
+            - HIGH
+            - NORMAL
+            - LOW
+          example: NORMAL
+
         opening:
           type: string
           format: date-time

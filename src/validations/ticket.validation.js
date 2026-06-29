@@ -22,6 +22,13 @@ export const createTicketSchema = z.object({
       required_error: "O departamento é obrigatório.",
     })
     .int("O ID do departamento deve ser um número inteiro."),
+
+  priority: z.enum(["HIGH", "NORMAL", "LOW"], {
+    required_error: "A prioridade é obrigatória.",
+    errorMap: () => ({
+      message: "Prioridade inválida.",
+    }),
+  }),
 });
 
 export const updateTicketSchema = z
@@ -44,6 +51,14 @@ export const updateTicketSchema = z
       .enum(["OPEN", "IN_PROGRESS", "CLOSED"], {
         errorMap: () => ({
           message: "Status inválido.",
+        }),
+      })
+      .optional(),
+
+    priority: z
+      .enum(["HIGH", "NORMAL", "LOW"], {
+        errorMap: () => ({
+          message: "Prioridade inválida.",
         }),
       })
       .optional(),
