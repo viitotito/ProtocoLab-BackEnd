@@ -71,3 +71,59 @@ components:
         companyId:
           type: integer
           example: 1
+
+    Ticket:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+
+        title:
+          type: string
+          example: Computador não liga
+
+        description:
+          type: string
+          example: O computador não inicia após pressionar o botão de ligar.
+
+        status:
+          type: string
+          example: OPEN
+
+        opening:
+          type: string
+          format: date-time
+          example: "2026-06-29T15:30:00.000Z"
+
+        completion:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+
+        owner:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+
+            name:
+              type: string
+              example: João Silva
+
+            email:
+              type: string
+              example: joao@empresa.com
+
+        department:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 2
+
+            name:
+              type: string
+              example: TI
