@@ -1,63 +1,79 @@
 {
-  "common": {
-    "invalid_fields": "Invalid fields"
-  },
-  "company": {
-    "name": {
-      "required": "Company name is required.",
-      "min": "Company name must be at least 2 characters.",
-      "max": "Company name must be at most 45 characters."
-    },
-    "email": {
-      "required": "Email is required.",
-      "invalid": "Invalid email.",
-      "max": "Email must be at most 45 characters."
-    },
-    "cnpj": {
-      "required": "CNPJ is required.",
-      "invalid": "CNPJ must contain exactly 14 digits."
-    },
-    "employee_name": {
-      "required": "Employee name is required.",
-      "min": "Name must be at least 3 characters.",
-      "max": "Name must be at most 45 characters.",
-      "invalid": "Name must contain only letters and spaces."
-    },
-    "password": {
-      "required": "Password is required.",
-      "min": "Password must be at least 8 characters.",
-      "max": "Password must be at most 72 characters."
-    },
-    "confirm_password": {
-      "required": "Password confirmation is required.",
-      "not_match": "Passwords do not match."
-    }
-  },
-  "user": {
-    "name": {
-      "required": "User name is required.",
-      "min": "Name must be at least 3 characters.",
-      "max": "Name must be at most 45 characters.",
-      "invalid": "Name must contain only letters and spaces."
-    },
-    "email": {
-      "required": "User email is required.",
-      "invalid": "Invalid email.",
-      "max": "Email must be at most 45 characters."
-    },
-    "password": {
-      "required": "Password is required.",
-      "min": "Password must be at least 8 characters.",
-      "max": "Password must be at most 72 characters."
-    },
-    "role": {
-      "required": "User role is required.",
-      "min": "Role must be at least 3 characters.",
-      "max": "Role must be at most 20 characters."
-    },
-    "department": {
-      "required": "Department is required.",
-      "invalid": "Department ID must be an integer."
-    }
-  }
+	"common": {
+		"invalid_fields": "Invalid fields"
+	},
+
+	"company": {
+		"name": {
+			"required": "Company name is required.",
+			"min": "Company name must be at least 2 characters.",
+			"max": "Company name must be at most 45 characters."
+		},
+		"email": {
+			"required": "Email is required.",
+			"invalid": "Invalid email.",
+			"max": "Email must be at most 45 characters."
+		},
+		"cnpj": {
+			"required": "CNPJ is required.",
+			"invalid": "CNPJ must contain exactly 14 digits."
+		},
+		"employee_name": {
+			"required": "Employee name is required.",
+			"min": "Name must be at least 3 characters.",
+			"max": "Name must be at most 45 characters.",
+			"invalid": "Name must contain only letters and spaces."
+		},
+		"password": {
+			"required": "Password is required.",
+			"min": "Password must be at least 8 characters.",
+			"max": "Password must be at most 72 characters."
+		},
+		"confirm_password": {
+			"required": "Password confirmation is required.",
+			"not_match": "Passwords do not match."
+		}
+	},
+
+	"user": {
+		"name": {
+			"required": "User name is required.",
+			"min": "Name must be at least 3 characters.",
+			"max": "Name must be at most 45 characters.",
+			"invalid": "Name must contain only letters and spaces."
+		},
+		"email": {
+			"required": "User email is required.",
+			"invalid": "Invalid email.",
+			"max": "Email must be at most 45 characters."
+		},
+		"password": {
+			"required": "Password is required.",
+			"min": "Password must be at least 8 characters.",
+			"max": "Password must be at most 72 characters."
+		},
+		"role": {
+			"required": "User role is required.",
+			"min": "Role must be at least 3 characters.",
+			"max": "Role must be at most 20 characters."
+		},
+		"department": {
+			"required": "Department is required.",
+			"invalid": "Department ID must be an integer."
+		}
+	},
+
+	"department": {
+		"name": {
+			"required": "Department name is required.",
+			"min": "Name must be at least 2 characters.",
+			"max": "Name must be at most 25 characters."
+		},
+
+		"description": {
+			"required": "Description is required.",
+			"min": "Description must be at least 5 characters.",
+			"max": "Description must be at most 80 characters."
+		}
+	}
 }

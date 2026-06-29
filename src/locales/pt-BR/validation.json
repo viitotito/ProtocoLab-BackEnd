@@ -1,74 +1,88 @@
 {
-  "common": {
-    "invalid_fields": "Campos inválidos"
-  },
+	"common": {
+		"invalid_fields": "Campos inválidos"
+	},
 
-  "company": {
-    "name": {
-      "required": "Nome da empresa é obrigatório.",
-      "min": "Nome da empresa deve possuir pelo menos 2 caracteres.",
-      "max": "Nome da empresa deve possuir no máximo 45 caracteres."
-    },
+	"company": {
+		"name": {
+			"required": "Nome da empresa é obrigatório.",
+			"min": "Nome da empresa deve possuir pelo menos 2 caracteres.",
+			"max": "Nome da empresa deve possuir no máximo 45 caracteres."
+		},
 
-    "email": {
-      "required": "Email é obrigatório.",
-      "invalid": "Email inválido.",
-      "max": "Email deve possuir no máximo 45 caracteres."
-    },
+		"email": {
+			"required": "Email é obrigatório.",
+			"invalid": "Email inválido.",
+			"max": "Email deve possuir no máximo 45 caracteres."
+		},
 
-    "cnpj": {
-      "required": "CNPJ é obrigatório.",
-      "invalid": "CNPJ deve conter exatamente 14 números."
-    },
+		"cnpj": {
+			"required": "CNPJ é obrigatório.",
+			"invalid": "CNPJ deve conter exatamente 14 números."
+		},
 
-    "employee_name": {
-      "required": "Nome do funcionário é obrigatório.",
-      "min": "Nome deve possuir pelo menos 3 caracteres.",
-      "max": "Nome deve possuir no máximo 45 caracteres.",
-      "invalid": "Nome deve conter apenas letras e espaços."
-    },
+		"employee_name": {
+			"required": "Nome do funcionário é obrigatório.",
+			"min": "Nome deve possuir pelo menos 3 caracteres.",
+			"max": "Nome deve possuir no máximo 45 caracteres.",
+			"invalid": "Nome deve conter apenas letras e espaços."
+		},
 
-    "password": {
-      "required": "Senha é obrigatória.",
-      "min": "Senha deve possuir pelo menos 8 caracteres.",
-      "max": "Senha deve possuir no máximo 72 caracteres."
-    },
+		"password": {
+			"required": "Senha é obrigatória.",
+			"min": "Senha deve possuir pelo menos 8 caracteres.",
+			"max": "Senha deve possuir no máximo 72 caracteres."
+		},
 
-    "confirm_password": {
-      "required": "Confirmação de senha é obrigatória.",
-      "not_match": "As senhas não coincidem."
-    }
-  },
+		"confirm_password": {
+			"required": "Confirmação de senha é obrigatória.",
+			"not_match": "As senhas não coincidem."
+		}
+	},
 
-  "user": {
-    "name": {
-      "required": "Nome do usuário é obrigatório.",
-      "min": "Nome deve ter no mínimo 3 caracteres.",
-      "max": "Nome deve ter no máximo 45 caracteres.",
-      "invalid": "Nome deve conter apenas letras e espaços."
-    },
+	"user": {
+		"name": {
+			"required": "Nome do usuário é obrigatório.",
+			"min": "Nome deve ter no mínimo 3 caracteres.",
+			"max": "Nome deve ter no máximo 45 caracteres.",
+			"invalid": "Nome deve conter apenas letras e espaços."
+		},
 
-    "email": {
-      "required": "E-mail do usuário é obrigatório.",
-      "invalid": "E-mail inválido.",
-      "max": "E-mail deve ter no máximo 45 caracteres."
-    },
+		"email": {
+			"required": "E-mail do usuário é obrigatório.",
+			"invalid": "E-mail inválido.",
+			"max": "E-mail deve ter no máximo 45 caracteres."
+		},
 
-    "password": {
-      "required": "Senha é obrigatória.",
-      "min": "Senha deve ter no mínimo 8 caracteres.",
-      "max": "Senha deve ter no máximo 72 caracteres."
-    },
+		"password": {
+			"required": "Senha é obrigatória.",
+			"min": "Senha deve ter no mínimo 8 caracteres.",
+			"max": "Senha deve ter no máximo 72 caracteres."
+		},
 
-    "role": {
-      "required": "Papel do usuário é obrigatório.",
-      "min": "Papel deve ter no mínimo 3 caracteres.",
-      "max": "Papel deve ter no máximo 20 caracteres."
-    },
+		"role": {
+			"required": "Papel do usuário é obrigatório.",
+			"min": "Papel deve ter no mínimo 3 caracteres.",
+			"max": "Papel deve ter no máximo 20 caracteres."
+		},
 
-    "department": {
-      "required": "Departamento é obrigatório.",
-      "invalid": "ID do departamento deve ser um número inteiro."
-    }
-  }
+		"department": {
+			"required": "Departamento é obrigatório.",
+			"invalid": "ID do departamento deve ser um número inteiro."
+		}
+	},
+
+	"department": {
+		"name": {
+			"required": "Nome do departamento é obrigatório.",
+			"min": "Nome deve ter no mínimo 2 caracteres.",
+			"max": "Nome deve ter no máximo 25 caracteres."
+		},
+
+		"description": {
+			"required": "A descrição é obrigatória.",
+			"min": "A descrição deve ter no mínimo 5 caracteres.",
+			"max": "A descrição deve ter no máximo 80 caracteres."
+		}
+	}
 }
