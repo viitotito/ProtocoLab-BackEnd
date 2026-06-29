@@ -127,13 +127,26 @@ export async function deleteUser(id, companyId, loggedUserId, t) {
     throw new Error(t("user:error.self_delete"));
   }
 
-  const deleted = await prisma.user.deleteMany({
-    where: { id, companyId },
-  });
+  try {
+    const deleted = await prisma.user.deleteMany({
+      where: {
+        id,
+        companyId,
+      },
+    });
 
-  if (deleted.count === 0) {
-    throw new Error(t("user:error.user_not_found"));
+    if (deleted.count === 0) {
+      throw new Error(t("user:error.user_not_found"));
+    }
+
+    return {
+      message: t("user:success.user_deleted"),
+    };
+  } catch (err) {
+    if (err.code === "P2003") {
+      throw new Error(t("user:error.has_dependencies"));
+    }
+
+    throw err;
   }
-
-  return { message: t("user:success.user_deleted") };
 }

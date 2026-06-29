@@ -9,6 +9,7 @@
     "email_exists": "Este correo ya está en uso en esta empresa.",
     "department_invalid": "Departamento inválido para esta empresa.",
     "self_update": "No puedes actualizar tu propio usuario.",
-    "self_delete": "No puedes eliminar tu propio usuario."
+    "self_delete": "No puedes eliminar tu propio usuario.",
+    "has_dependencies": "No se puede eliminar el usuario porque tiene registros vinculados."
   }
 }
