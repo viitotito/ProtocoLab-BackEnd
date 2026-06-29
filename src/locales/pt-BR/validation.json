@@ -20,7 +20,5 @@
   "password_max": "Senha deve possuir no máximo 72 caracteres.",
 
   "confirm_password_required": "Confirmação de senha é obrigatória.",
-  "passwords_not_match": "As senhas não coincidem.",
-
-  "invalid_fields": "Campos inválidos"
+  "passwords_not_match": "As senhas não coincidem."
 }

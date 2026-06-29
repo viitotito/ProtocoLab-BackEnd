@@ -1,0 +1,9 @@
+{
+  "token_missing": "Access token not provided.",
+  "token_invalid": "Invalid or expired access token.",
+  "user_not_found": "User not found.",
+  "only_admin_manager": "Access allowed only for Admin or Manager.",
+  "manager_cannot_create_admin": "Manager cannot create ADMIN user.",
+  "no_permission_create_user": "You do not have permission to create users.",
+  "invalid_fields": "Invalid fields"
+}

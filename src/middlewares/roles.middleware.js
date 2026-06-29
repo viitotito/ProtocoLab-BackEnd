@@ -4,21 +4,21 @@ export function roles() {
     const roleToAssign = req.body.role?.toUpperCase();
 
     if (requesterRole === "ADMIN") {
-      return next(); 
+      return next();
     }
 
     if (requesterRole === "GERENTE") {
       if (roleToAssign === "ADMIN") {
         return res.status(403).json({
-          message: "Gerente não pode criar usuário ADMIN.",
+          message: req.t("middleware:manager_cannot_create_admin"),
         });
       }
 
-      return next(); 
+      return next();
     }
 
     return res.status(403).json({
-      message: "Você não tem permissão para criar usuários.",
+      message: req.t("middleware:no_permission_create_user"),
     });
   };
 }

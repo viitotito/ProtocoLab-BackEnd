@@ -10,7 +10,7 @@ i18next
     fallbackLng: "pt-BR",
     preload: ["pt-BR", "en-US", "es-ES"],
 
-    ns: ["common", "validation", "auth", "users", "tickets", "comments", "departments"],
+    ns: ["common", "validation", "auth", "user", "ticket", "comment", "department","middleware"],
     defaultNS: "common",
 
     backend: {
