@@ -17,7 +17,7 @@ export async function register(data) {
   });
 
   if (companyExists) {
-    throw new AppError("auth:company_already_exists");
+    throw new AppError("auth:error.company_already_exists");
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -73,7 +73,7 @@ export async function login(data, res) {
   });
 
   if (!company) {
-    throw new AppError("auth:invalid_credentials", 401);
+    throw new AppError("auth:error.invalid_credentials", 401);
   }
 
   const user = await prisma.user.findFirst({
@@ -84,13 +84,13 @@ export async function login(data, res) {
   });
 
   if (!user) {
-    throw new AppError("auth:invalid_credentials", 401);
+    throw new AppError("auth:error.invalid_credentials", 401);
   }
 
   const passwordMatch = await bcrypt.compare(password, user.password);
 
   if (!passwordMatch) {
-    throw new AppError("auth:invalid_credentials", 401);
+    throw new AppError("auth:error.invalid_credentials", 401);
   }
 
   const accessToken = generateAccessToken(user);
@@ -112,7 +112,7 @@ export async function login(data, res) {
 
 export async function refresh(token) {
   if (!token) {
-    throw new AppError("auth:refresh_token_missing", 401);
+    throw new AppError("auth:error.refresh_token_missing", 401);
   }
 
   const payload = verifyRefreshToken(token);
@@ -122,7 +122,7 @@ export async function refresh(token) {
   });
 
   if (!user) {
-    throw new AppError("auth:user_not_found", 404);
+    throw new AppError("auth:error.user_not_found", 404);
   }
 
   return generateAccessToken(user);
@@ -142,7 +142,7 @@ export async function me(userId) {
   });
 
   if (!user) {
-    throw new AppError("auth:user_not_found", 404);
+    throw new AppError("auth:error.user_not_found", 404);
   }
 
   return user;
@@ -152,6 +152,6 @@ export async function logout(res) {
   clearRefreshCookie(res);
 
   return {
-    message: "auth:logout_success",
+    message: "auth:success.logout_success",
   };
 }

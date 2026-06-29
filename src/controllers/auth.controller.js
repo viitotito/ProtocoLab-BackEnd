@@ -6,7 +6,7 @@ export async function register(req, res) {
     const user = await authService.register(req.body);
 
     return res.status(201).json({
-      message: req.t("auth:register_success"),
+      message: req.t("auth:success.register_success"),
       user,
     });
   } catch (err) {
@@ -21,7 +21,7 @@ export async function login(req, res) {
     const result = await authService.login(req.body, res);
 
     return res.status(200).json({
-      message: req.t("auth:login_success"),
+      message: req.t("auth:success.login_success"),
       ...result,
     });
   } catch (err) {
@@ -38,7 +38,7 @@ export async function refresh(req, res) {
     const accessToken = await authService.refresh(token);
 
     return res.status(200).json({
-      message: req.t("auth:refresh_success"),
+      message: req.t("auth:success.refresh_success"),
       accessToken,
     });
   } catch (err) {
@@ -65,7 +65,7 @@ export async function logout(req, res) {
     const result = await authService.logout(res);
 
     return res.status(200).json({
-      message: req.t("auth:logout_success"),
+      message: req.t("auth:success.logout_success"),
       ...result,
     });
   } catch (err) {
