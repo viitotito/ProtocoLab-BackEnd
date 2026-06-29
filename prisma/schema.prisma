@@ -13,6 +13,12 @@ enum TicketStatus {
   CLOSED
 }
 
+enum Priority {
+  HIGH
+  NORMAL
+  LOW
+}
+
 model Company {
   id    Int    @id @default(autoincrement())
   email String @unique @db.VarChar(45)
