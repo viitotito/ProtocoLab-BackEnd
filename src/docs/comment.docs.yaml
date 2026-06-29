@@ -1,0 +1,222 @@
+paths:
+  /api/tickets/{id}/comments:
+    post:
+      summary: Criar comentário no ticket
+      tags:
+        - Comments
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID do ticket
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - description
+              properties:
+                description:
+                  type: string
+                  example: "O problema ainda está ocorrendo."
+
+      responses:
+        "201":
+          description: Comentário criado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  description:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      role:
+                        type: string
+
+        "400":
+          description: Erro de validação ou regra de negócio
+
+        "401":
+          description: Não autenticado
+
+        "404":
+          description: Ticket não encontrado
+
+
+    get:
+      summary: Listar comentários do ticket
+      tags:
+        - Comments
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID do ticket
+
+      responses:
+        "200":
+          description: Lista de comentários
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    description:
+                      type: string
+                    user:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        email:
+                          type: string
+                        role:
+                          type: string
+
+        "404":
+          description: Ticket não encontrado
+
+
+  /api/tickets/{id}/comments/{commentId}:
+    patch:
+      summary: Atualizar comentário
+      tags:
+        - Comments
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID do ticket
+
+        - in: path
+          name: commentId
+          required: true
+          schema:
+            type: integer
+          description: ID do comentário
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - description
+              properties:
+                description:
+                  type: string
+                  example: "Atualizando comentário após verificação."
+
+      responses:
+        "200":
+          description: Comentário atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  description:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      role:
+                        type: string
+
+        "400":
+          description: Erro de validação
+
+        "403":
+          description: Sem permissão para editar
+
+        "404":
+          description: Comentário não encontrado
+
+
+    delete:
+      summary: Deletar comentário
+      tags:
+        - Comments
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID do ticket
+
+        - in: path
+          name: commentId
+          required: true
+          schema:
+            type: integer
+          description: ID do comentário
+
+      responses:
+        "200":
+          description: Comentário deletado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Comentário deletado com sucesso.
+
+        "403":
+          description: Sem permissão para deletar
+
+        "404":
+          description: Comentário não encontrado
