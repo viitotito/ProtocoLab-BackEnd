@@ -11,6 +11,8 @@ import userRoutes from "./src/routes/user.routes.js";
 import departmentRoutes from "./src/routes/department.routes.js";
 import ticketRoutes from "./src/routes/ticket.routes.js";
 
+import { i18nMiddleware } from "./src/middlewares/i18n.middleware.js";
+
 dotenv.config();
 
 const app = express();
@@ -30,7 +32,20 @@ app.use(
   }),
 );
 
-app.use("/api/documentation", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use(i18nMiddleware);
+
+app.use(
+  "/api/documentation",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, {
+    swaggerOptions: {
+      requestInterceptor: (req) => {
+        req.headers["accept-language"] = req.headers["accept-language"] || "pt-BR";
+        return req;
+      },
+    },
+  })
+);
 
 app.use("/api/auth", authRoutes);
 
@@ -58,5 +73,5 @@ const externalUrl = process.env.EXTERNAL_URL;
 
 const server = app.listen(PORT, () => {
   const baseUrl = externalUrl || `http://localhost:${PORT}`;
-  console.log(`Server rodando em ${baseUrl}`);
+  console.log(`Server running on: ${baseUrl}`);
 });

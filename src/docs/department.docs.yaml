@@ -1,16 +1,19 @@
 paths:
   /api/departments:
     get:
-      summary: Lista departamentos da empresa
+      summary: Lists the company's departments
       tags:
         - Departments
+      
+      parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
 
       security:
         - bearerAuth: []
 
       responses:
         "200":
-          description: Lista de departamentos
+          description: List of departments
           content:
             application/json:
               schema:
@@ -19,16 +22,19 @@ paths:
                   $ref: "#/components/schemas/Department"
 
         "401":
-          description: Não autenticado
+          description: Not authenticated
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Unauthorized"
 
     post:
-      summary: Cria departamento
+      summary: Creates a department
       tags:
         - Departments
+
+      parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
 
       security:
         - bearerAuth: []
@@ -45,29 +51,29 @@ paths:
               properties:
                 name:
                   type: string
-                  example: TI
+                  example: IT
 
                 description:
                   type: string
-                  example: Tecnologia da Informação
+                  example: Information Technology
 
       responses:
         "201":
-          description: Departamento criado com sucesso
+          description: Department successfully created
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Department"
 
         "400":
-          description: Erro de validação
+          description: Validation error
 
         "403":
-          description: Sem permissão
+          description: No permission
 
   /api/departments/{id}:
     get:
-      summary: Busca departamento por ID
+      summary: Search for a department by ID
       tags:
         - Departments
 
@@ -75,6 +81,7 @@ paths:
         - bearerAuth: []
 
       parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
         - in: path
           name: id
           required: true
@@ -83,17 +90,17 @@ paths:
 
       responses:
         "200":
-          description: Departamento encontrado
+          description: Department found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Department"
 
         "404":
-          description: Departamento não encontrado
+          description: Department not found
 
     patch:
-      summary: Atualiza departamento
+      summary: Updates department
       tags:
         - Departments
 
@@ -101,6 +108,7 @@ paths:
         - bearerAuth: []
 
       parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
         - in: path
           name: id
           required: true
@@ -121,16 +129,16 @@ paths:
 
       responses:
         "200":
-          description: Departamento atualizado com sucesso
+          description: Department successfully updated
 
         "400":
-          description: Erro de validação
+          description: Validation error
 
         "404":
-          description: Departamento não encontrado
+          description: Department not found
 
     delete:
-      summary: Remove departamento
+      summary: Remove department
       tags:
         - Departments
 
@@ -138,6 +146,7 @@ paths:
         - bearerAuth: []
 
       parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
         - in: path
           name: id
           required: true
@@ -146,10 +155,10 @@ paths:
 
       responses:
         "200":
-          description: Departamento removido com sucesso
+          description: Department successfully removed
 
         "400":
-          description: Não é possível remover (vínculos existentes)
+          description: It is not possible to remove (existing links)
 
         "404":
-          description: Departamento não encontrado
+          description: Department not found

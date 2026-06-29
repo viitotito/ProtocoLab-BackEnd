@@ -25,6 +25,7 @@
     "express": "^5.2.1",
     "i18next": "^26.3.3",
     "i18next-fs-backend": "^2.6.6",
+    "i18next-http-middleware": "^3.9.7",
     "jsonwebtoken": "^9.0.3",
     "prisma": "^6.19.3",
     "swagger-jsdoc": "^6.3.0",

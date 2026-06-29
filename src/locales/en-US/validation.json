@@ -1,0 +1,26 @@
+{
+  "company_name_required": "Company name is required.",
+  "company_name_min": "Company name must be at least 2 characters long.",
+  "company_name_max": "Company name must be at most 45 characters long.",
+
+  "email_required": "Email is required.",
+  "email_invalid": "Invalid email.",
+  "email_max": "Email must be at most 45 characters long.",
+
+  "cnpj_required": "CNPJ is required.",
+  "cnpj_invalid": "CNPJ must contain exactly 14 digits.",
+
+  "employee_name_required": "Employee name is required.",
+  "employee_name_min": "Name must be at least 3 characters long.",
+  "employee_name_max": "Name must be at most 45 characters long.",
+  "employee_name_invalid": "Name must contain only letters and spaces.",
+
+  "password_required": "Password is required.",
+  "password_min": "Password must be at least 8 characters long.",
+  "password_max": "Password must be at most 72 characters long.",
+
+  "confirm_password_required": "Password confirmation is required.",
+  "passwords_not_match": "Passwords do not match.",
+
+  "invalid_fields": "Invalid fields"
+}

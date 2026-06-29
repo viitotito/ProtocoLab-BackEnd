@@ -3,76 +3,79 @@ import { z } from "zod";
 const cnpjRegex = /^\d{14}$/;
 const employeeNameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$/;
 
-export const registerSchema = z.object({
-        companyName: z
-            .string({
-                required_error: "Nome da empresa é obrigatório.",
-            })
-            .trim()
-            .min(2, "Nome da empresa deve possuir pelo menos 2 caracteres.")
-            .max(45, "Nome da empresa deve possuir no máximo 45 caracteres."),
+export const registerSchema = (t) =>
+    z
+        .object({
+            companyName: z
+                .string({
+                    required_error: t("validation:company_name_required"),
+                })
+                .trim()
+                .min(2, t("validation:company_name_min"))
+                .max(45, t("validation:company_name_max")),
 
+            companyEmail: z
+                .string({
+                    required_error: t("validation:email_required"),
+                })
+                .trim()
+                .email(t("validation:email_invalid"))
+                .max(45, t("validation:email_max")),
+
+            cnpj: z
+                .string({
+                    required_error: t("validation:cnpj_required"),
+                })
+                .regex(cnpjRegex, t("validation:cnpj_invalid")),
+
+            employeeName: z
+                .string({
+                    required_error: t("validation:employee_name_required"),
+                })
+                .trim()
+                .min(3, t("validation:employee_name_min"))
+                .max(45, t("validation:employee_name_max"))
+                .regex(employeeNameRegex, t("validation:employee_name_invalid")),
+
+            password: z
+                .string({
+                    required_error: t("validation:password_required"),
+                })
+                .min(8, t("validation:password_min"))
+                .max(72, t("validation:password_max")),
+
+            confirmPassword: z.string({
+                required_error: t("validation:confirm_password_required"),
+            }),
+        })
+        .refine((data) => data.password === data.confirmPassword, {
+            path: ["confirmPassword"],
+            message: t("validation:passwords_not_match"),
+        });
+
+export const loginSchema = (t) =>
+    z.object({
         companyEmail: z
             .string({
-                required_error: "Email da empresa é obrigatório.",
+                required_error: t("validation:email_required"),
             })
             .trim()
-            .email("Email da empresa inválido.")
-            .max(45, "Email da empresa deve possuir no máximo 45 caracteres."),
-
-        cnpj: z
-            .string({
-                required_error: "CNPJ é obrigatório.",
-            })
-            .regex(cnpjRegex, "CNPJ deve conter exatamente 14 números."),
+            .email(t("validation:email_invalid"))
+            .max(45, t("validation:email_max")),
 
         employeeName: z
             .string({
-                required_error: "Nome do funcionário é obrigatório.",
+                required_error: t("validation:employee_name_required"),
             })
             .trim()
-            .min(3, "Nome deve possuir pelo menos 3 caracteres.")
-            .max(45, "Nome deve possuir no máximo 45 caracteres.")
-            .regex(employeeNameRegex, "Nome deve conter apenas letras e espaços."),
+            .min(3, t("validation:employee_name_min"))
+            .max(45, t("validation:employee_name_max"))
+            .regex(employeeNameRegex, t("validation:employee_name_invalid")),
 
         password: z
             .string({
-                required_error: "Senha é obrigatória.",
+                required_error: t("validation:password_required"),
             })
-            .min(8, "Senha deve possuir pelo menos 8 caracteres.")
-            .max(72, "Senha deve possuir no máximo 72 caracteres."),
-
-        confirmPassword: z.string({
-            required_error: "Confirmação de senha é obrigatória.",
-        }),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-        path: ["confirmPassword"],
-        message: "As senhas não coincidem.",
+            .min(8, t("validation:password_min"))
+            .max(72, t("validation:password_max")),
     });
-
-export const loginSchema = z.object({
-    companyEmail: z
-        .string({
-            required_error: "Email da empresa é obrigatório.",
-        })
-        .trim()
-        .email("Email inválido.")
-        .max(45, "Email deve possuir no máximo 45 caracteres."),
-
-    employeeName: z
-        .string({
-            required_error: "Nome do funcionário é obrigatório.",
-        })
-        .trim()
-        .min(3, "Nome deve possuir pelo menos 3 caracteres.")
-        .max(45, "Nome deve possuir no máximo 45 caracteres.")
-        .regex(employeeNameRegex, "Nome deve conter apenas letras e espaços."),
-
-    password: z
-        .string({
-            required_error: "Senha é obrigatória.",
-        })
-        .min(8, "Senha deve possuir pelo menos 8 caracteres.")
-        .max(72, "Senha deve possuir no máximo 72 caracteres."),
-});

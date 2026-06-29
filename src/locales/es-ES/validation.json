@@ -1,0 +1,26 @@
+{
+  "company_name_required": "El nombre de la empresa es obligatorio.",
+  "company_name_min": "El nombre de la empresa debe tener al menos 2 caracteres.",
+  "company_name_max": "El nombre de la empresa debe tener como máximo 45 caracteres.",
+
+  "email_required": "El correo electrónico es obligatorio.",
+  "email_invalid": "Correo electrónico inválido.",
+  "email_max": "El correo electrónico debe tener como máximo 45 caracteres.",
+
+  "cnpj_required": "El CNPJ es obligatorio.",
+  "cnpj_invalid": "El CNPJ debe contener exactamente 14 dígitos.",
+
+  "employee_name_required": "El nombre del empleado es obligatorio.",
+  "employee_name_min": "El nombre debe tener al menos 3 caracteres.",
+  "employee_name_max": "El nombre debe tener como máximo 45 caracteres.",
+  "employee_name_invalid": "El nombre debe contener solo letras y espacios.",
+
+  "password_required": "La contraseña es obligatoria.",
+  "password_min": "La contraseña debe tener al menos 8 caracteres.",
+  "password_max": "La contraseña debe tener como máximo 72 caracteres.",
+
+  "confirm_password_required": "La confirmación de contraseña es obligatoria.",
+  "passwords_not_match": "Las contraseñas no coinciden.",
+
+  "invalid_fields": "Campos inválidos"
+}

@@ -1,30 +1,23 @@
 import bcrypt from "bcrypt";
 import prisma from "../configs/prisma.js";
 
-import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../utils/jwt.js";
+import { generateAccessToken, generateRefreshToken, verifyRefreshToken} from "../utils/jwt.js";
 
 import { setRefreshCookie, clearRefreshCookie } from "../utils/cookies.js";
 
+import { AppError } from "../utils/appError.js";
+
 export async function register(data) {
-  const {
-    companyName,
-    companyEmail,
-    cnpj,
-    employeeName,
-    password,
-  } = data;
+  const { companyName, companyEmail, cnpj, employeeName, password } = data;
 
   const companyExists = await prisma.company.findFirst({
     where: {
-      OR: [
-        { email: companyEmail },
-        { cnpj },
-      ],
+      OR: [{ email: companyEmail }, { cnpj }],
     },
   });
 
   if (companyExists) {
-    throw new Error("Empresa já cadastrada.");
+    throw new AppError("auth:company_already_exists");
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -41,7 +34,7 @@ export async function register(data) {
     const department = await tx.department.create({
       data: {
         name: "RH",
-        description: "Departamento padrão do sistema.",
+        description: "Default Department.",
         companyId: company.id,
       },
     });
@@ -80,7 +73,7 @@ export async function login(data, res) {
   });
 
   if (!company) {
-    throw new Error("Credenciais inválidas.");
+    throw new AppError("auth:invalid_credentials", 401);
   }
 
   const user = await prisma.user.findFirst({
@@ -91,13 +84,13 @@ export async function login(data, res) {
   });
 
   if (!user) {
-    throw new Error("Credenciais inválidas.");
+    throw new AppError("auth:invalid_credentials", 401);
   }
 
   const passwordMatch = await bcrypt.compare(password, user.password);
 
   if (!passwordMatch) {
-    throw new Error("Credenciais inválidas.");
+    throw new AppError("auth:invalid_credentials", 401);
   }
 
   const accessToken = generateAccessToken(user);
@@ -118,7 +111,9 @@ export async function login(data, res) {
 }
 
 export async function refresh(token) {
-  if (!token) throw new Error("Refresh token não informado.");
+  if (!token) {
+    throw new AppError("auth:refresh_token_missing", 401);
+  }
 
   const payload = verifyRefreshToken(token);
 
@@ -126,7 +121,9 @@ export async function refresh(token) {
     where: { id: payload.sub },
   });
 
-  if (!user) throw new Error("Usuário não encontrado.");
+  if (!user) {
+    throw new AppError("auth:user_not_found", 404);
+  }
 
   return generateAccessToken(user);
 }
@@ -144,7 +141,9 @@ export async function me(userId) {
     },
   });
 
-  if (!user) throw new Error("Usuário não encontrado.");
+  if (!user) {
+    throw new AppError("auth:user_not_found", 404);
+  }
 
   return user;
 }
@@ -153,6 +152,6 @@ export async function logout(res) {
   clearRefreshCookie(res);
 
   return {
-    message: "Logout realizado com sucesso.",
+    message: "auth:logout_success",
   };
 }

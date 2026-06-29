@@ -11,7 +11,7 @@ components:
       properties:
         message:
           type: string
-          example: Erro de validação.
+          example: Validation error.
         errors:
           type: object
           additionalProperties:
@@ -24,7 +24,7 @@ components:
       properties:
         message:
           type: string
-          example: Token de acesso inválido ou expirado.
+          example: Invalid or expired access token.
 
     User:
       type: object
@@ -62,11 +62,11 @@ components:
 
         name:
           type: string
-          example: TI
+          example: IT
 
         description:
           type: string
-          example: Tecnologia da informação.
+          example: Information Technology.
 
         companyId:
           type: integer
@@ -81,27 +81,19 @@ components:
 
         title:
           type: string
-          example: Computador não liga
+          example: Computer won't turn on
 
         description:
           type: string
-          example: O computador não inicia.
+          example: The computer won't turn on.
 
         status:
           type: string
-          enum:
-            - OPEN
-            - IN_PROGRESS
-            - CLOSED
-          example: OPEN
+          enum: [OPEN, IN_PROGRESS, CLOSED]
 
         priority:
           type: string
-          enum:
-            - HIGH
-            - NORMAL
-            - LOW
-          example: NORMAL
+          enum: [HIGH, NORMAL, LOW]
 
         opening:
           type: string
@@ -119,36 +111,12 @@ components:
           properties:
             department:
               type: object
-              properties:
-                id:
-                  type: integer
-                  example: 2
-
-                name:
-                  type: string
-                  example: TI
 
             owner:
               type: object
-              properties:
-                id:
-                  type: integer
-                  example: 1
-
-                name:
-                  type: string
-                  example: João Silva
 
             _count:
               type: object
-              properties:
-                assignees:
-                  type: integer
-                  example: 3
-
-                comments:
-                  type: integer
-                  example: 5
 
     TicketDetails:
       allOf:
@@ -157,14 +125,6 @@ components:
           properties:
             department:
               type: object
-              properties:
-                id:
-                  type: integer
-                  example: 2
-
-                name:
-                  type: string
-                  example: TI
 
             owner:
               $ref: "#/components/schemas/User"
@@ -173,3 +133,17 @@ components:
               type: array
               items:
                 $ref: "#/components/schemas/User"
+
+  parameters:
+    AcceptLanguage:
+      name: Accept-Language
+      in: header
+      required: false
+      schema:
+        type: string
+        enum:
+          - pt-BR
+          - en-US
+          - es-ES
+        default: pt-BR
+      description: Language selector
