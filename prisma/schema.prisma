@@ -7,97 +7,102 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Roles {
-  Gerente
-  Auxiliar
-  Junior
-  Pleno
-  Senior
-}
-
 enum TicketStatus {
-  Open
-  Closed
-  Progress
+  OPEN
+  IN_PROGRESS
+  CLOSED
 }
 
-model Companies {
+model Company {
   id    Int    @id @default(autoincrement())
-  name  String @db.VarChar(45)
   email String @unique @db.VarChar(45)
+  name  String @db.VarChar(45)
   cnpj  String @unique @db.VarChar(45)
 
-  departments Departments[]
-  users       Users[]
+  departments Department[]
+  users       User[]
+
+  @@map("companies")
 }
 
-model Departments {
+model Department {
   id          Int    @id @default(autoincrement())
   name        String @db.VarChar(25)
   description String @db.VarChar(80)
 
   companyId Int
-  company   Companies @relation(fields: [companyId], references: [id])
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
-  users   Users[]
-  tickets Tickets[]
+  users   User[]
+  tickets Ticket[]
+
+  @@map("departments")
 }
 
-model Users {
+model User {
   id       Int    @id @default(autoincrement())
   name     String @db.VarChar(45)
-  email    String @unique @db.VarChar(45)
+  email    String @db.VarChar(45)
   password String @db.VarChar(60)
-  role     Roles
+  role     String @db.VarChar(20)
 
   departmentId Int
   companyId    Int
 
-  department Departments @relation(fields: [departmentId], references: [id])
-  company    Companies    @relation(fields: [companyId], references: [id])
+  department Department @relation(fields: [departmentId], references: [id], onDelete: Restrict)
+  company    Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
-  ownedTickets Tickets[] @relation("TicketOwner")
-  comments     Comments[]
+  ownedTickets Ticket[] @relation("TicketOwner")
+  comments     Comment[]
   assignments  TicketAssignment[]
+
+  @@unique([email, companyId])
+  @@map("users")
 }
 
-model Tickets {
+model Ticket {
   id          Int    @id @default(autoincrement())
   title       String @db.VarChar(25)
   description String @db.VarChar(80)
 
-  status TicketStatus
+  status TicketStatus @default(OPEN)
 
-  opening    DateTime  @db.Date
-  completion DateTime? @db.Date
+  opening    DateTime @default(now())
+  completion DateTime?
 
   departmentId Int
   ownerId      Int
 
-  department Departments @relation(fields: [departmentId], references: [id])
-  owner      Users       @relation("TicketOwner", fields: [ownerId], references: [id])
+  department Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  owner      User       @relation("TicketOwner", fields: [ownerId], references: [id], onDelete: Restrict)
 
-  comments  Comments[]
+  comments  Comment[]
   assignees TicketAssignment[]
+
+  @@map("tickets")
 }
 
 model TicketAssignment {
   ticketId Int
   userId   Int
 
-  ticket Tickets @relation(fields: [ticketId], references: [id])
-  user   Users   @relation(fields: [userId], references: [id])
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([ticketId, userId])
+
+  @@map("ticket_assignments")
 }
 
-model Comments {
-  id          Int     @id @default(autoincrement())
-  description String? @db.VarChar(80)
+model Comment {
+  id          Int    @id @default(autoincrement())
+  description String @db.VarChar(80)
 
   ticketId Int
   userId   Int
 
-  ticket Tickets @relation(fields: [ticketId], references: [id])
-  user   Users   @relation(fields: [userId], references: [id])
+  ticket Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("comments")
 }

@@ -1,15 +1,14 @@
-export function authorize(...allowedRoles) {
+export function authorize() {
   return (req, res, next) => {
+    const role = req.user.role?.toUpperCase();
 
-    if (!req.user) {
-      return res.status(401).json({
-        message: "Usuário não autenticado."
-      });
-    }
+    const allowedRoles = ["ADMIN", "GERENTE"];
+    const isRH = req.user.departmentId === 1;
 
-    if (!allowedRoles.includes(req.user.role)) {
+    if (!(isRH || allowedRoles.includes(role))) {
       return res.status(403).json({
-        message: "Você não possui permissão para acessar este recurso."
+        message:
+          "Acesso permitido apenas para o departamento de RH, com perfis de Admin ou Gerente.",
       });
     }
 

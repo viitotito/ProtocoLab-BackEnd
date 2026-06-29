@@ -1,7 +1,5 @@
 components:
-
   schemas:
-
     MessageResponse:
       type: object
       properties:
@@ -37,15 +35,15 @@ components:
 
         name:
           type: string
-          example: João Silva
+          example: Admin
 
         email:
           type: string
-          example: contato@protocolab.com
+          example: admin@protocolab.com
 
         role:
           type: string
-          example: Gerente
+          example: Admin
 
         companyId:
           type: integer
