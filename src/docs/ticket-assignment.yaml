@@ -1,0 +1,148 @@
+paths:
+  /api/tickets/{ticketId}/assignees:
+    post:
+      summary: Atribui um colaborador ao ticket
+      tags:
+        - Tickets Assignments
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: ticketId
+          required: true
+          schema:
+            type: integer
+          example: 1
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+              properties:
+                userId:
+                  type: integer
+                  example: 5
+
+      responses:
+        "201":
+          description: Colaborador atribuído ao ticket com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ticketId:
+                    type: integer
+                    example: 1
+
+                  userId:
+                    type: integer
+                    example: 5
+
+                  user:
+                    $ref: "#/components/schemas/User"
+
+        "400":
+          description: Erro de validação ou regra de negócio.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+        "401":
+          description: Token inválido ou expirado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+
+        "403":
+          description: Sem permissão.
+
+    get:
+      summary: Lista os colaboradores atribuídos ao ticket
+      tags:
+        - Tickets Assignments
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: ticketId
+          required: true
+          schema:
+            type: integer
+          example: 1
+
+      responses:
+        "200":
+          description: Lista de colaboradores atribuídos ao ticket.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+
+        "404":
+          description: Ticket não encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /api/tickets/{ticketId}/assignees/{userId}:
+    delete:
+      summary: Remove um colaborador do ticket
+      tags:
+        - Tickets Assignments
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: ticketId
+          required: true
+          schema:
+            type: integer
+          example: 1
+
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+          example: 5
+
+      responses:
+        "200":
+          description: Colaborador removido do ticket.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+        "404":
+          description: Atribuição não encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+        "401":
+          description: Token inválido ou expirado.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+
+        "403":
+          description: Sem permissão.
