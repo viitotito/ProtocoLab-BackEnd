@@ -1,7 +1,11 @@
 import prisma from "../configs/prisma.js";
 import bcrypt from "bcrypt";
 
-export async function updateUser(id, companyId, data) {
+export async function updateUser(id, companyId, loggedUserId, data) {
+  if (id === loggedUserId) {
+    throw new Error("Você não pode alterar seu próprio usuário.");
+  }
+
   const updateData = { ...data };
 
   if (updateData.password) {
@@ -113,7 +117,11 @@ export async function createUser(companyId, data) {
   });
 }
 
-export async function deleteUser(id, companyId) {
+export async function deleteUser(id, companyId, loggedUserId) {
+  if (id === loggedUserId) {
+    throw new Error("Você não pode deletar seu próprio usuário.");
+  }
+
   const deleted = await prisma.user.deleteMany({
     where: {
       id,

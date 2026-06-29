@@ -38,6 +38,7 @@ export const updateUser = async (req, res) => {
     const user = await userService.updateUser(
       Number(req.params.id),
       req.user.companyId,
+      req.user.id,
       req.body
     );
 
@@ -51,6 +52,7 @@ export async function deleteUser(req, res) {
   try {
     await userService.deleteUser(
       Number(req.params.id),
+      req.user.id,
       req.user.companyId
     );
 
