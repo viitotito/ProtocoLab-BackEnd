@@ -10,7 +10,7 @@ export function roles() {
     if (requesterRole === "GERENTE") {
       if (roleToAssign === "ADMIN") {
         return res.status(403).json({
-          message: req.t("middleware:manager_cannot_create_admin"),
+          message: req.t("middleware:user.cannot_create_admin"),
         });
       }
 
@@ -18,7 +18,7 @@ export function roles() {
     }
 
     return res.status(403).json({
-      message: req.t("middleware:no_permission_create_user"),
+      message: req.t("middleware:user.no_permission"),
     });
   };
 }

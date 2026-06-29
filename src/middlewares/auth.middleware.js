@@ -7,7 +7,7 @@ export async function authMiddleware(req, res, next) {
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({
-        message: req.t("middleware:token_missing"),
+        message: req.t("middleware:token.missing"),
       });
     }
 
@@ -22,7 +22,7 @@ export async function authMiddleware(req, res, next) {
 
     if (!user) {
       return res.status(401).json({
-        message: req.t("middleware:user_not_found"),
+        message: req.t("middleware:user.not_found"),
       });
     }
 
@@ -38,7 +38,7 @@ export async function authMiddleware(req, res, next) {
     next();
   } catch (err) {
     return res.status(401).json({
-      message: req.t("middleware:token_invalid"),
+      message: req.t("middleware:token.invalid"),
     });
   }
 }

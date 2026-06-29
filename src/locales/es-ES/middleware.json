@@ -1,8 +1,13 @@
 {
-  "token_missing": "Token de acceso no proporcionado.",
-  "token_invalid": "Token de acceso inválido o expirado.",
-  "user_not_found": "Usuario no encontrado.",
-  "only_admin_manager": "Acceso permitido solo para Admin o Gerente.",
-  "manager_cannot_create_admin": "El gerente no puede crear usuario ADMIN.",
-  "no_permission_create_user": "No tienes permiso para crear usuarios."
+  "token": {
+    "missing": "Token de acceso no proporcionado.",
+    "invalid": "Token de acceso inválido o expirado."
+  },
+
+  "user": {
+    "not_found": "Usuario no encontrado.",
+    "only_admin_manager": "Acceso permitido solo para Admin o Gerente.",
+    "cannot_create_admin": "El gerente no puede crear usuarios ADMIN.",
+    "no_permission": "No tienes permiso para crear usuarios."
+  }
 }

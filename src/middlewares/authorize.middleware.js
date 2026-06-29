@@ -6,7 +6,7 @@ export function authorize() {
 
     if (!allowedRoles.includes(role)) {
       return res.status(403).json({
-        message: req.t("middleware:only_admin_manager"),
+        message: req.t("middleware:user.only_admin_manager"),
       });
     }
 
