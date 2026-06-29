@@ -75,13 +75,13 @@ paths:
         - bearerAuth: []
 
       parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
         - in: path
           name: ticketId
           required: true
           schema:
             type: integer
           example: 1
-        - $ref: "#/components/parameters/AcceptLanguage"
 
       responses:
         "200":

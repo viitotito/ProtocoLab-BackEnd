@@ -7,7 +7,7 @@ export const validate = (schemaFn) => (req, res, next) => {
 
   if (!result.success) {
     return res.status(400).json({
-      message: t("middleware:invalid_fields"),
+      message: t("common:invalid_fields"),
       errors: result.error.flatten(),
     });
   }
