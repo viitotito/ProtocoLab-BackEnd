@@ -52,3 +52,22 @@ components:
         departmentId:
           type: integer
           example: 1
+
+    Department:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+
+        name:
+          type: string
+          example: TI
+
+        description:
+          type: string
+          example: Tecnologia da informação.
+
+        companyId:
+          type: integer
+          example: 1

@@ -1,6 +1,8 @@
 import bcrypt from "bcrypt";
 import prisma from "../configs/prisma.js";
+
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../utils/jwt.js";
+
 import { setRefreshCookie, clearRefreshCookie } from "../utils/cookies.js";
 
 export async function register(data) {

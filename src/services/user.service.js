@@ -1,31 +1,42 @@
 import prisma from "../configs/prisma.js";
 import bcrypt from "bcrypt";
 
-export async function updateUser(id, companyId, loggedUserId, data) {
-  if (id === loggedUserId) {
-    throw new Error("Você não pode alterar seu próprio usuário.");
-  }
+export async function createUser(companyId, data) {
+  const { name, email, password, role, departmentId } = data;
 
-  const updateData = { ...data };
-
-  if (updateData.password) {
-    updateData.password = await bcrypt.hash(updateData.password, 10);
-  }
-
-  const result = await prisma.user.updateMany({
+  const userExists = await prisma.user.findFirst({
     where: {
-      id,
+      email,
       companyId,
     },
-    data: updateData,
   });
 
-  if (result.count === 0) {
-    throw new Error("Usuário não encontrado.");
+  if (userExists) {
+    throw new Error("Email já cadastrado nesta empresa.");
   }
 
-  return prisma.user.findFirst({
-    where: { id, companyId },
+  const department = await prisma.department.findFirst({
+    where: {
+      id: departmentId,
+      companyId,
+    },
+  });
+
+  if (!department) {
+    throw new Error("Departamento inválido para esta empresa.");
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  return prisma.user.create({
+    data: {
+      name,
+      email,
+      password: hashedPassword,
+      role,
+      companyId,
+      departmentId,
+    },
     select: {
       id: true,
       name: true,
@@ -71,42 +82,47 @@ export async function getUserById(id, companyId) {
   });
 }
 
-export async function createUser(companyId, data) {
-  const { name, email, password, role, departmentId } = data;
+export async function updateUser(id, companyId, loggedUserId, data) {
+  if (id === loggedUserId) {
+    throw new Error("Você não pode alterar seu próprio usuário.");
+  }
 
-  const userExists = await prisma.user.findFirst({
+  const updateData = { ...data };
+
+  if (updateData.password) {
+    updateData.password = await bcrypt.hash(updateData.password, 10);
+  }
+
+  if (updateData.email) {
+  const emailExists = await prisma.user.findFirst({
     where: {
-      email,
+      email: updateData.email,
       companyId,
+      NOT: {
+        id,
+      },
     },
   });
 
-  if (userExists) {
-    throw new Error("Email já cadastrado nesta empresa.");
+  if (emailExists) {
+    throw new Error("Este e-mail já está em uso nesta empresa.");
   }
-
-  const department = await prisma.department.findFirst({
+}
+  const result = await prisma.user.updateMany({
     where: {
-      id: departmentId,
+      id,
       companyId,
     },
+    data: updateData,
   });
 
-  if (!department) {
-    throw new Error("Departamento inválido para esta empresa.");
+  if (result.count === 0) {
+    throw new Error("Usuário não encontrado.");
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
 
-  return prisma.user.create({
-    data: {
-      name,
-      email,
-      password: hashedPassword,
-      role,
-      companyId,
-      departmentId,
-    },
+  return prisma.user.findFirst({
+    where: { id, companyId },
     select: {
       id: true,
       name: true,
