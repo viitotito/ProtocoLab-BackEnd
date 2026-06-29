@@ -1,0 +1,14 @@
+{
+  "success": {
+    "user_created": "User created successfully.",
+    "user_updated": "User updated successfully.",
+    "user_deleted": "User deleted successfully."
+  },
+  "error": {
+    "user_not_found": "User not found.",
+    "email_exists": "This email is already in use in this company.",
+    "department_invalid": "Invalid department for this company.",
+    "self_update": "You cannot update your own user.",
+    "self_delete": "You cannot delete your own user."
+  }
+}

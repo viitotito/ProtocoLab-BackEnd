@@ -16,17 +16,18 @@ const router = express.Router();
 
 router.use(authMiddleware);
 router.use(authorize());
-router.use(roles())
 
 router.post(
     "/",
     validate(createUserSchema),
+    roles(),
     userController.createUser
 );
 
 router.patch(
     "/:id",
     validate(updateUserSchema),
+    roles(),
     userController.updateUser
 );
 
