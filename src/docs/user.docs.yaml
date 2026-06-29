@@ -139,18 +139,23 @@ paths:
               properties:
                 name:
                   type: string
+                  example: Maria Silva
 
                 email:
                   type: string
+                  example: maria@email.com
 
                 password:
                   type: string
+                  example: senha123
 
                 role:
                   type: string
+                  example: Admin
 
                 departmentId:
                   type: integer
+                  example: 1
 
       responses:
         "200":

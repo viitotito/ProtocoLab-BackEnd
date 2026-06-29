@@ -21,23 +21,23 @@ paths:
               properties:
                 companyName:
                   type: string
-                  example: ProtoCoLab
+                  example: ProtocoLab
                 companyEmail:
                   type: string
                   format: email
-                  example: contato@protocolab.com
+                  example: admin@protocolab.com
                 cnpj:
                   type: string
                   example: "12345678000199"
                 employeeName:
                   type: string
-                  example: João Silva
+                  example: Admin
                 password:
                   type: string
-                  example: senha123
+                  example: admin123
                 confirmPassword:
                   type: string
-                  example: senha123
+                  example: admin123
 
       responses:
         "201":
@@ -58,10 +58,10 @@ paths:
                         example: 1
                       name:
                         type: string
-                        example: João Silva
+                        example: Admin
                       email:
                         type: string
-                        example: contato@protocolab.com
+                        example: admin@protocolab.com
                       role:
                         type: string
                         example: Admin
@@ -73,7 +73,7 @@ paths:
                             example: 1
                           name:
                             type: string
-                            example: ProtoCoLab
+                            example: ProtocoLab
 
         "400":
           description: Erro de validação ou regra de negócio.
@@ -102,13 +102,13 @@ paths:
                 companyEmail:
                   type: string
                   format: email
-                  example: contato@protocolab.com
+                  example: admin@protocolab.com
                 employeeName:
                   type: string
-                  example: João Silva
+                  example: Admin
                 password:
                   type: string
-                  example: senha123
+                  example: admin123
 
       responses:
         "200":
