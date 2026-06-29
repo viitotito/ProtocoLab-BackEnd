@@ -3,8 +3,7 @@ import { z } from "zod";
 const cnpjRegex = /^\d{14}$/;
 const employeeNameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$/;
 
-export const registerSchema = z
-    .object({
+export const registerSchema = z.object({
         companyName: z
             .string({
                 required_error: "Nome da empresa é obrigatório.",

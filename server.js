@@ -8,6 +8,7 @@ import swaggerSpec from "./src/configs/swagger.js";
 
 import authRoutes from "./src/routes/auth.routes.js";
 import userRoutes from "./src/routes/user.routes.js";
+import departmentRoutes from "./src/routes/department.routes.js";
 
 dotenv.config();
 
@@ -33,6 +34,8 @@ app.use("/api/documentation", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/auth", authRoutes);
 
 app.use("/api/users", userRoutes);
+
+app.use("/api/departments", departmentRoutes);
 
 app.get("/", (req, res) => {
   res.json({
