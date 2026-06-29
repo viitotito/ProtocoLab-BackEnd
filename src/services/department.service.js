@@ -1,6 +1,6 @@
 import prisma from "../configs/prisma.js";
 
-export async function createDepartment(companyId, data) {
+export async function createDepartment(companyId, data, t) {
   const { name, description } = data;
 
   const exists = await prisma.department.findFirst({
@@ -11,7 +11,7 @@ export async function createDepartment(companyId, data) {
   });
 
   if (exists) {
-    throw new Error("Já existe um departamento com esse nome nesta empresa.");
+    throw new Error(t("department:error.name_exists"));
   }
 
   return prisma.department.create({
@@ -40,54 +40,7 @@ export async function listDepartments(companyId) {
   });
 }
 
-export async function getDepartmentById(id, companyId) {
-  return prisma.department.findFirst({
-    where: {
-      id,
-      companyId,
-    },
-    include: {
-      users: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          role: true,
-        },
-      },
-      tickets: {
-        select: {
-          id: true,
-          title: true,
-          status: true,
-        },
-      },
-    },
-  });
-}
-
-export async function updateDepartment(id, companyId, data) {
-  const result = await prisma.department.updateMany({
-    where: {
-      id,
-      companyId,
-    },
-    data,
-  });
-
-  if (result.count === 0) {
-    throw new Error("Departamento não encontrado.");
-  }
-
-  return prisma.department.findFirst({
-    where: {
-      id,
-      companyId,
-    },
-  });
-}
-
-export async function deleteDepartment(id, companyId) {
+export async function getDepartmentById(id, companyId, t) {
   const department = await prisma.department.findFirst({
     where: {
       id,
@@ -100,22 +53,60 @@ export async function deleteDepartment(id, companyId) {
   });
 
   if (!department) {
-    throw new Error("Departamento não encontrado.");
+    throw new Error(t("department:error.department_not_found"));
   }
 
-  if (department.users.length > 0) {
-    throw new Error("Não é possível deletar departamento com usuários vinculados.");
-  }
+  return department;
+}
 
-  if (department.tickets.length > 0) {
-    throw new Error("Não é possível deletar departamento com tickets vinculados.");
-  }
-
-  await prisma.department.delete({
+export async function updateDepartment(id, companyId, data, t) {
+  const result = await prisma.department.updateMany({
     where: {
       id,
+      companyId,
+    },
+    data,
+  });
+
+  if (result.count === 0) {
+    throw new Error(t("department:error.department_not_found"));
+  }
+
+  return prisma.department.findFirst({
+    where: {
+      id,
+      companyId,
+    },
+  });
+}
+
+export async function deleteDepartment(id, companyId, t) {
+  const department = await prisma.department.findFirst({
+    where: {
+      id,
+      companyId,
+    },
+    include: {
+      users: true,
+      tickets: true,
     },
   });
 
-  return { message: "Departamento deletado com sucesso." };
+  if (!department) {
+    throw new Error(t("department:error.department_not_found"));
+  }
+
+  if (department.users.length > 0) {
+    throw new Error(t("department:error.has_users"));
+  }
+
+  if (department.tickets.length > 0) {
+    throw new Error(t("department:error.has_tickets"));
+  }
+
+  await prisma.department.delete({
+    where: { id },
+  });
+
+  return { message: t("department:success.department_deleted") };
 }
