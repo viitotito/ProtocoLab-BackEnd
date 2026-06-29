@@ -2,6 +2,8 @@ import express from "express";
 
 import * as ticketController from "../controllers/ticket.controller.js";
 
+import commentRoutes from "../routes/comment.routes.js";
+
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import { authorize } from "../middlewares/authorize.middleware.js";
 import { validate } from "../middlewares/validation.middleware.js";
@@ -56,5 +58,7 @@ router.delete(
   "/:id/assignees/:userId",
   ticketController.removeUser
 );
+
+router.use("/:id/comments", commentRoutes);
 
 export default router;
