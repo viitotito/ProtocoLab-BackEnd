@@ -1,0 +1,155 @@
+paths:
+  /api/departments:
+    get:
+      summary: Lista departamentos da empresa
+      tags:
+        - Departments
+
+      security:
+        - bearerAuth: []
+
+      responses:
+        "200":
+          description: Lista de departamentos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Department"
+
+        "401":
+          description: Não autenticado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+
+    post:
+      summary: Cria departamento
+      tags:
+        - Departments
+
+      security:
+        - bearerAuth: []
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - description
+              properties:
+                name:
+                  type: string
+                  example: TI
+
+                description:
+                  type: string
+                  example: Tecnologia da Informação
+
+      responses:
+        "201":
+          description: Departamento criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Department"
+
+        "400":
+          description: Erro de validação
+
+        "403":
+          description: Sem permissão
+
+  /api/departments/{id}:
+    get:
+      summary: Busca departamento por ID
+      tags:
+        - Departments
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        "200":
+          description: Departamento encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Department"
+
+        "404":
+          description: Departamento não encontrado
+
+    patch:
+      summary: Atualiza departamento
+      tags:
+        - Departments
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+
+      responses:
+        "200":
+          description: Departamento atualizado com sucesso
+
+        "400":
+          description: Erro de validação
+
+        "404":
+          description: Departamento não encontrado
+
+    delete:
+      summary: Remove departamento
+      tags:
+        - Departments
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        "200":
+          description: Departamento removido com sucesso
+
+        "400":
+          description: Não é possível remover (vínculos existentes)
+
+        "404":
+          description: Departamento não encontrado
