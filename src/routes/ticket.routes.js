@@ -39,8 +39,22 @@ router.patch(
 
 router.delete(
   "/:id",
-  authorize(),
   ticketController.deleteTicket
+);
+
+router.post(
+  "/:id/assignees",
+  ticketController.assignUser
+);
+
+router.get(
+  "/:id/assignees",
+  ticketController.listAssignedUsers
+);
+
+router.delete(
+  "/:id/assignees/:userId",
+  ticketController.removeUser
 );
 
 export default router;

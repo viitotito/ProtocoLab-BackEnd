@@ -85,45 +85,83 @@ components:
 
         description:
           type: string
-          example: O computador não inicia após pressionar o botão de ligar.
+          example: O computador não inicia.
 
         status:
           type: string
+          enum:
+            - OPEN
+            - IN_PROGRESS
+            - CLOSED
           example: OPEN
 
         opening:
           type: string
           format: date-time
-          example: "2026-06-29T15:30:00.000Z"
 
         completion:
           type: string
           format: date-time
           nullable: true
-          example: null
 
-        owner:
-          type: object
+    TicketList:
+      allOf:
+        - $ref: "#/components/schemas/Ticket"
+        - type: object
           properties:
-            id:
-              type: integer
-              example: 1
+            department:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 2
 
-            name:
-              type: string
-              example: João Silva
+                name:
+                  type: string
+                  example: TI
 
-            email:
-              type: string
-              example: joao@empresa.com
+            owner:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 1
 
-        department:
-          type: object
+                name:
+                  type: string
+                  example: João Silva
+
+            _count:
+              type: object
+              properties:
+                assignees:
+                  type: integer
+                  example: 3
+
+                comments:
+                  type: integer
+                  example: 5
+
+    TicketDetails:
+      allOf:
+        - $ref: "#/components/schemas/Ticket"
+        - type: object
           properties:
-            id:
-              type: integer
-              example: 2
+            department:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 2
 
-            name:
-              type: string
-              example: TI
+                name:
+                  type: string
+                  example: TI
+
+            owner:
+              $ref: "#/components/schemas/User"
+
+            assignees:
+              type: array
+              items:
+                $ref: "#/components/schemas/User"

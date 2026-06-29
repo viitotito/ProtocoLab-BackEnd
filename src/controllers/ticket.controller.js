@@ -79,3 +79,51 @@ export async function deleteTicket(req, res) {
     });
   }
 }
+
+export async function assignUser(req, res) {
+  try {
+    const assignment = await ticketService.assignUser(
+      Number(req.params.id),
+      Number(req.body.userId),
+      req.user.companyId
+    );
+
+    return res.status(201).json(assignment);
+  } catch (err) {
+    return res.status(400).json({
+      message: err.message,
+    });
+  }
+}
+
+export async function listAssignedUsers(req, res) {
+  try {
+    const users = await ticketService.listAssignedUsers(
+      Number(req.params.id),
+      req.user.companyId
+    );
+
+    return res.json(users);
+  } catch (err) {
+    return res.status(400).json({
+      message: err.message,
+    });
+  }
+}
+
+export async function removeUser(req, res) {
+  try {
+    const result = await ticketService.removeUser(
+      Number(req.params.id),
+      Number(req.params.userId),
+      req.user.companyId
+    );
+
+    return res.json(result);
+  } catch (err) {
+    return res.status(400).json({
+      message: err.message,
+    });
+  }
+}
+

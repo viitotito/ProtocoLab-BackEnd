@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 const prisma = new PrismaClient();
 
 async function main() {
-  const senha = await bcrypt.hash("12345678", 10);
+  const senha = await bcrypt.hash("admin123", 10);
 
   const company = await prisma.company.create({
     data: {
