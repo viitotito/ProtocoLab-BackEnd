@@ -8,12 +8,15 @@ import { authorize } from "../middlewares/authorize.middleware.js";
 
 import { validate } from "../middlewares/validation.middleware.js";
 
+import { roles } from "../middlewares/roles.middleware.js";
+
 import { createUserSchema, updateUserSchema } from "../validations/user.validation.js";
 
 const router = express.Router();
 
 router.use(authMiddleware);
 router.use(authorize());
+router.use(roles())
 
 router.post(
     "/",

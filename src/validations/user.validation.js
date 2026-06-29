@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+const userNameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$/;
+
 export const createUserSchema = z.object({
   name: z
     .string({
@@ -7,7 +9,8 @@ export const createUserSchema = z.object({
     })
     .trim()
     .min(3, "O nome deve ter no mínimo 3 caracteres.")
-    .max(45, "O nome deve ter no máximo 45 caracteres."),
+    .max(45, "O nome deve ter no máximo 45 caracteres.")
+    .regex(userNameRegex, "O nome deve conter apenas letras e espaços."),
 
   email: z
     .string({
@@ -46,6 +49,7 @@ export const updateUserSchema = z.object({
     .trim()
     .min(3, "O nome deve ter no mínimo 3 caracteres.")
     .max(45, "O nome deve ter no máximo 45 caracteres.")
+    .regex(userNameRegex, "O nome deve conter apenas letras e espaços.")
     .optional(),
 
   email: z

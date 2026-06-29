@@ -93,6 +93,21 @@ export async function updateUser(id, companyId, loggedUserId, data) {
     updateData.password = await bcrypt.hash(updateData.password, 10);
   }
 
+  if (updateData.email) {
+  const emailExists = await prisma.user.findFirst({
+    where: {
+      email: updateData.email,
+      companyId,
+      NOT: {
+        id,
+      },
+    },
+  });
+
+  if (emailExists) {
+    throw new Error("Este e-mail já está em uso nesta empresa.");
+  }
+}
   const result = await prisma.user.updateMany({
     where: {
       id,
@@ -104,6 +119,7 @@ export async function updateUser(id, companyId, loggedUserId, data) {
   if (result.count === 0) {
     throw new Error("Usuário não encontrado.");
   }
+
 
   return prisma.user.findFirst({
     where: { id, companyId },

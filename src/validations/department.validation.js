@@ -6,7 +6,7 @@ export const createDepartmentSchema = z.object({
       required_error: "O nome do departamento é obrigatório.",
     })
     .trim()
-    .min(3, "O nome deve ter no mínimo 3 caracteres.")
+    .min(2, "O nome deve ter no mínimo 2 caracteres.")
     .max(25, "O nome deve ter no máximo 25 caracteres."),
 
   description: z
@@ -22,7 +22,7 @@ export const updateDepartmentSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(3, "O nome deve ter no mínimo 3 caracteres.")
+    .min(2, "O nome deve ter no mínimo 2 caracteres.")
     .max(25, "O nome deve ter no máximo 25 caracteres.")
     .optional(),
 
