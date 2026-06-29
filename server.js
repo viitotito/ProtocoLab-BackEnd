@@ -9,6 +9,7 @@ import swaggerSpec from "./src/configs/swagger.js";
 import authRoutes from "./src/routes/auth.routes.js";
 import userRoutes from "./src/routes/user.routes.js";
 import departmentRoutes from "./src/routes/department.routes.js";
+import ticketRoutes from "./src/routes/ticket.routes.js";
 
 dotenv.config();
 
@@ -36,6 +37,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 
 app.use("/api/departments", departmentRoutes);
+
+app.use("/api/tickets", ticketRoutes);
 
 app.get("/", (req, res) => {
   res.json({
