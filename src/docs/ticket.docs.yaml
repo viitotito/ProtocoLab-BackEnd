@@ -1,0 +1,211 @@
+paths:
+  /api/tickets:
+    get:
+      summary: Lista todos os chamados da empresa
+      tags:
+        - Tickets
+
+      security:
+        - bearerAuth: []
+
+      responses:
+        "200":
+          description: Lista de chamados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Ticket"
+
+        "401":
+          description: Token inválido ou expirado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+
+    post:
+      summary: Cria um novo chamado
+      tags:
+        - Tickets
+
+      security:
+        - bearerAuth: []
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+                - departmentId
+              properties:
+                title:
+                  type: string
+                  example: Computador não liga
+
+                description:
+                  type: string
+                  example: O computador não inicia após pressionar o botão de ligar.
+
+                departmentId:
+                  type: integer
+                  example: 2
+
+      responses:
+        "201":
+          description: Chamado criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ticket"
+
+        "400":
+          description: Erro de validação ou regra de negócio
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+        "401":
+          description: Token inválido ou expirado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+
+  /api/tickets/{id}:
+    get:
+      summary: Busca um chamado pelo ID
+      tags:
+        - Tickets
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        "200":
+          description: Chamado encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ticket"
+
+        "404":
+          description: Chamado não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+    patch:
+      summary: Atualiza um chamado
+      tags:
+        - Tickets
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: Computador não liga
+
+                description:
+                  type: string
+                  example: O computador continua sem ligar.
+
+                status:
+                  type: string
+                  enum:
+                    - OPEN
+                    - IN_PROGRESS
+                    - CLOSED
+                  example: IN_PROGRESS
+
+                departmentId:
+                  type: integer
+                  example: 2
+
+      responses:
+        "200":
+          description: Chamado atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ticket"
+
+        "400":
+          description: Erro de validação
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+        "404":
+          description: Chamado não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+    delete:
+      summary: Remove um chamado
+      tags:
+        - Tickets
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        "200":
+          description: Chamado removido com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+        "404":
+          description: Chamado não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+        "403":
+          description: Sem permissão para excluir chamados
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
