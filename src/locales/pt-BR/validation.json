@@ -116,5 +116,12 @@
 		"update": {
 			"empty": "Informe pelo menos um campo para atualização."
 		}
+	},
+
+	"comment": {
+		"description": {
+			"required": "A descrição do comentário é obrigatória.",
+			"min": "O comentário deve ter pelo menos 1 caractere."
+		}
 	}
 }

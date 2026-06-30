@@ -107,5 +107,12 @@
 		"update": {
 			"empty": "Provide at least one field to update."
 		}
+	},
+
+	"comment": {
+		"description": {
+			"required": "Comment description is required.",
+			"min": "Comment must be at least 1 character."
+		}
 	}
 }
