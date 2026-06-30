@@ -1,6 +1,6 @@
 import prisma from "../configs/prisma.js";
 
-async function getTicket(ticketId, companyId) {
+async function getTicket(ticketId, companyId, t) {
   const ticket = await prisma.ticket.findFirst({
     where: {
       id: ticketId,
@@ -11,14 +11,14 @@ async function getTicket(ticketId, companyId) {
   });
 
   if (!ticket) {
-    throw new Error("Ticket não encontrado.");
+    throw new Error(t("comment:error.ticket_not_found"));
   }
 
   return ticket;
 }
 
-export async function createComment(ticketId, userId, companyId, data) {
-  await getTicket(ticketId, companyId);
+export async function createComment(ticketId, userId, companyId, data, t) {
+  await getTicket(ticketId, companyId, t);
 
   return prisma.comment.create({
     data: {
@@ -41,16 +41,12 @@ export async function createComment(ticketId, userId, companyId, data) {
   });
 }
 
-export async function listComments(ticketId, companyId) {
-  await getTicket(ticketId, companyId);
+export async function listComments(ticketId, companyId, t) {
+  await getTicket(ticketId, companyId, t);
 
   return prisma.comment.findMany({
-    where: {
-      ticketId,
-    },
-    orderBy: {
-      id: "asc",
-    },
+    where: { ticketId },
+    orderBy: { id: "asc" },
     select: {
       id: true,
       description: true,
@@ -71,9 +67,10 @@ export async function updateComment(
   commentId,
   companyId,
   userId,
-  data
+  data,
+  t
 ) {
-  await getTicket(ticketId, companyId);
+  await getTicket(ticketId, companyId, t);
 
   const comment = await prisma.comment.findFirst({
     where: {
@@ -83,17 +80,15 @@ export async function updateComment(
   });
 
   if (!comment) {
-    throw new Error("Comentário não encontrado.");
+    throw new Error(t("comment:error.comment_not_found"));
   }
 
   if (comment.userId !== userId) {
-    throw new Error("Você não pode editar este comentário.");
+    throw new Error(t("comment:error.not_allowed"));
   }
 
   return prisma.comment.update({
-    where: {
-      id: commentId,
-    },
+    where: { id: commentId },
     data: {
       description: data.description,
     },
@@ -116,9 +111,10 @@ export async function deleteComment(
   ticketId,
   commentId,
   companyId,
-  userId
+  userId,
+  t
 ) {
-  await getTicket(ticketId, companyId);
+  await getTicket(ticketId, companyId, t);
 
   const comment = await prisma.comment.findFirst({
     where: {
@@ -128,20 +124,18 @@ export async function deleteComment(
   });
 
   if (!comment) {
-    throw new Error("Comentário não encontrado.");
+    throw new Error(t("comment:error.comment_not_found"));
   }
 
   if (comment.userId !== userId) {
-    throw new Error("Você não pode deletar este comentário.");
+    throw new Error(t("comment:error.not_allowed"));
   }
 
   await prisma.comment.delete({
-    where: {
-      id: commentId,
-    },
+    where: { id: commentId },
   });
 
   return {
-    message: "Comentário deletado com sucesso.",
+    message: t("comment:success.comment_deleted"),
   };
 }

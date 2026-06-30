@@ -1,0 +1,13 @@
+{
+  "success": {
+    "comment_created": "Comentario creado con éxito.",
+    "comment_updated": "Comentario actualizado con éxito.",
+    "comment_deleted": "Comentario eliminado con éxito."
+  },
+
+  "error": {
+    "ticket_not_found": "Ticket no encontrado.",
+    "comment_not_found": "Comentario no encontrado.",
+    "not_allowed": "No tienes permiso para realizar esta acción."
+  }
+}
