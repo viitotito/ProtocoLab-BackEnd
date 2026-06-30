@@ -1,5 +1,20 @@
 import prisma from "../configs/prisma.js";
 
+/**
+ * Cria um novo departamento dentro de uma empresa.
+ *
+ * @async
+ * @function createDepartment
+ * @param {string} companyId - ID da empresa.
+ * @param {Object} data - Dados do departamento.
+ * @param {string} data.name - Nome do departamento.
+ * @param {string} data.description - Descrição do departamento.
+ * @param {Function} t - Função de tradução i18n.
+ *
+ * @returns {Promise<Object>} Departamento criado.
+ *
+ * @throws {Error} Se já existir um departamento com o mesmo nome na empresa.
+ */
 export async function createDepartment(companyId, data, t) {
   const { name, description } = data;
 
@@ -23,6 +38,15 @@ export async function createDepartment(companyId, data, t) {
   });
 }
 
+/**
+ * Lista todos os departamentos de uma empresa.
+ *
+ * @async
+ * @function listDepartments
+ * @param {string} companyId - ID da empresa.
+ *
+ * @returns {Promise<Array<Object>>} Lista de departamentos com contagem de usuários e tickets.
+ */
 export async function listDepartments(companyId) {
   return prisma.department.findMany({
     where: { companyId },
@@ -40,6 +64,19 @@ export async function listDepartments(companyId) {
   });
 }
 
+/**
+ * Lista usuários de um departamento específico dentro de uma empresa.
+ *
+ * @async
+ * @function listUsersByDepartment
+ * @param {string} departmentId - ID do departamento.
+ * @param {string} companyId - ID da empresa.
+ * @param {Function} t - Função de tradução i18n.
+ *
+ * @returns {Promise<Array<Object>>} Lista de usuários do departamento.
+ *
+ * @throws {Error} Se o departamento não existir.
+ */
 export async function listUsersByDepartment(departmentId, companyId, t) {
   const department = await prisma.department.findFirst({
     where: {
@@ -66,6 +103,19 @@ export async function listUsersByDepartment(departmentId, companyId, t) {
   });
 }
 
+/**
+ * Busca um departamento pelo ID incluindo usuários e tickets.
+ *
+ * @async
+ * @function getDepartmentById
+ * @param {string} id - ID do departamento.
+ * @param {string} companyId - ID da empresa.
+ * @param {Function} t - Função de tradução i18n.
+ *
+ * @returns {Promise<Object>} Departamento com relações (users e tickets).
+ *
+ * @throws {Error} Se o departamento não existir.
+ */
 export async function getDepartmentById(id, companyId, t) {
   const department = await prisma.department.findFirst({
     where: {
@@ -85,6 +135,20 @@ export async function getDepartmentById(id, companyId, t) {
   return department;
 }
 
+/**
+ * Atualiza um departamento existente.
+ *
+ * @async
+ * @function updateDepartment
+ * @param {string} id - ID do departamento.
+ * @param {string} companyId - ID da empresa.
+ * @param {Object} data - Dados atualizados do departamento.
+ * @param {Function} t - Função de tradução i18n.
+ *
+ * @returns {Promise<Object>} Departamento atualizado.
+ *
+ * @throws {Error} Se o departamento não for encontrado.
+ */
 export async function updateDepartment(id, companyId, data, t) {
   const result = await prisma.department.updateMany({
     where: {
@@ -106,6 +170,21 @@ export async function updateDepartment(id, companyId, data, t) {
   });
 }
 
+/**
+ * Remove um departamento, desde que não tenha usuários ou tickets vinculados.
+ *
+ * @async
+ * @function deleteDepartment
+ * @param {string} id - ID do departamento.
+ * @param {string} companyId - ID da empresa.
+ * @param {Function} t - Função de tradução i18n.
+ *
+ * @returns {Promise<Object>} Mensagem de sucesso.
+ *
+ * @throws {Error} Se departamento não existir.
+ * @throws {Error} Se houver usuários vinculados.
+ * @throws {Error} Se houver tickets vinculados.
+ */
 export async function deleteDepartment(id, companyId, t) {
   const department = await prisma.department.findFirst({
     where: {

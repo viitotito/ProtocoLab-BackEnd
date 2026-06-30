@@ -3,6 +3,25 @@ import prisma from "../configs/prisma.js";
 const PRIORITIES = ["HIGH", "NORMAL", "LOW"];
 const STATUS = ["OPEN", "IN_PROGRESS", "CLOSED"];
 
+/**
+ * Cria um novo ticket dentro de uma empresa.
+ *
+ * @async
+ * @function createTicket
+ * @param {string} companyId - ID da empresa.
+ * @param {string} ownerId - ID do usuário criador do ticket.
+ * @param {Object} data - Dados do ticket.
+ * @param {string} data.title - Título do ticket.
+ * @param {string} data.description - Descrição do ticket.
+ * @param {string} data.departmentId - ID do departamento.
+ * @param {string} data.priority - Prioridade (HIGH | NORMAL | LOW).
+ * @param {Function} t - Função de tradução i18n.
+ *
+ * @returns {Promise<Object>} Ticket criado.
+ *
+ * @throws {Error} Se departamento não existir.
+ * @throws {Error} Se prioridade for inválida.
+ */
 export async function createTicket(companyId, ownerId, data, t) {
   const { title, description, departmentId, priority } = data;
 
@@ -56,6 +75,15 @@ export async function createTicket(companyId, ownerId, data, t) {
   });
 }
 
+/**
+ * Lista todos os tickets de uma empresa.
+ *
+ * @async
+ * @function listTickets
+ * @param {string} companyId - ID da empresa.
+ *
+ * @returns {Promise<Array<Object>>} Lista de tickets.
+ */
 export async function listTickets(companyId) {
   return prisma.ticket.findMany({
     where: {
@@ -94,6 +122,19 @@ export async function listTickets(companyId) {
   });
 }
 
+/**
+ * Busca um ticket pelo ID dentro de uma empresa.
+ *
+ * @async
+ * @function getTicketById
+ * @param {string} id - ID do ticket.
+ * @param {string} companyId - ID da empresa.
+ * @param {Function} t - Função de tradução i18n.
+ *
+ * @returns {Promise<Object>} Ticket encontrado com relações.
+ *
+ * @throws {Error} Se o ticket não existir.
+ */
 export async function getTicketById(id, companyId, t) {
   const ticket = await prisma.ticket.findFirst({
     where: {
@@ -150,6 +191,27 @@ export async function getTicketById(id, companyId, t) {
   return ticket;
 }
 
+/**
+ * Atualiza um ticket existente.
+ *
+ * @async
+ * @function updateTicket
+ * @param {string} id - ID do ticket.
+ * @param {string} companyId - ID da empresa.
+ * @param {Object} data - Dados de atualização.
+ * @param {string} [data.title]
+ * @param {string} [data.description]
+ * @param {string} [data.departmentId]
+ * @param {string} [data.priority]
+ * @param {string} [data.status]
+ * @param {Function} t - Função de tradução i18n.
+ *
+ * @returns {Promise<Object>} Ticket atualizado.
+ *
+ * @throws {Error} Se ticket não existir.
+ * @throws {Error} Se departamento inválido.
+ * @throws {Error} Se prioridade ou status inválidos.
+ */
 export async function updateTicket(id, companyId, data, t) {
   const ticket = await prisma.ticket.findFirst({
     where: {
@@ -208,6 +270,19 @@ export async function updateTicket(id, companyId, data, t) {
   });
 }
 
+/**
+ * Remove um ticket.
+ *
+ * @async
+ * @function deleteTicket
+ * @param {string} id - ID do ticket.
+ * @param {string} companyId - ID da empresa.
+ * @param {Function} t - Função de tradução i18n.
+ *
+ * @returns {Promise<Object>} Mensagem de sucesso.
+ *
+ * @throws {Error} Se ticket não existir.
+ */
 export async function deleteTicket(id, companyId, t) {
   const deleted = await prisma.ticket.deleteMany({
     where: {
@@ -227,6 +302,22 @@ export async function deleteTicket(id, companyId, t) {
   };
 }
 
+/**
+ * Atribui um usuário a um ticket.
+ *
+ * @async
+ * @function assignUser
+ * @param {string} ticketId - ID do ticket.
+ * @param {string} userId - ID do usuário.
+ * @param {string} companyId - ID da empresa.
+ * @param {Function} t - Função de tradução i18n.
+ *
+ * @returns {Promise<Object>} Relação ticket-usuário criada.
+ *
+ * @throws {Error} Se ticket não existir.
+ * @throws {Error} Se usuário não existir.
+ * @throws {Error} Se já estiver atribuído.
+ */
 export async function assignUser(ticketId, userId, companyId, t) {
   const ticket = await prisma.ticket.findFirst({
     where: {
@@ -285,6 +376,19 @@ export async function assignUser(ticketId, userId, companyId, t) {
   });
 }
 
+/**
+ * Lista usuários atribuídos a um ticket.
+ *
+ * @async
+ * @function listAssignedUsers
+ * @param {string} ticketId - ID do ticket.
+ * @param {string} companyId - ID da empresa.
+ * @param {Function} t - Função de tradução i18n.
+ *
+ * @returns {Promise<Array<Object>>} Lista de usuários atribuídos.
+ *
+ * @throws {Error} Se ticket não existir.
+ */
 export async function listAssignedUsers(ticketId, companyId, t) {
   const ticket = await prisma.ticket.findFirst({
     where: {
@@ -317,6 +421,21 @@ export async function listAssignedUsers(ticketId, companyId, t) {
   return ticket.assignees.map((a) => a.user);
 }
 
+/**
+ * Remove um usuário de um ticket.
+ *
+ * @async
+ * @function removeUser
+ * @param {string} ticketId - ID do ticket.
+ * @param {string} userId - ID do usuário.
+ * @param {string} companyId - ID da empresa.
+ * @param {Function} t - Função de tradução i18n.
+ *
+ * @returns {Promise<Object>} Mensagem de sucesso.
+ *
+ * @throws {Error} Se ticket não existir.
+ * @throws {Error} Se atribuição não existir.
+ */
 export async function removeUser(ticketId, userId, companyId, t) {
   const ticket = await prisma.ticket.findFirst({
     where: {

@@ -1,12 +1,28 @@
 import bcrypt from "bcrypt";
 import prisma from "../configs/prisma.js";
 
-import { generateAccessToken, generateRefreshToken, verifyRefreshToken} from "../utils/jwt.js";
+import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "../utils/jwt.js";
 
 import { setRefreshCookie, clearRefreshCookie } from "../utils/cookies.js";
 
 import { AppError } from "../utils/appError.js";
 
+/**
+ * Registra uma nova empresa, cria departamento padrão e usuário administrador.
+ *
+ * @async
+ * @function register
+ * @param {Object} data
+ * @param {string} data.companyName - Nome da empresa.
+ * @param {string} data.companyEmail - Email da empresa.
+ * @param {string} data.cnpj - CNPJ da empresa.
+ * @param {string} data.employeeName - Nome do usuário administrador.
+ * @param {string} data.password - Senha do usuário.
+ *
+ * @returns {Promise<Object>} Dados do usuário criado e empresa vinculada.
+ *
+ * @throws {AppError} Se empresa já existir.
+ */
 export async function register(data) {
   const { companyName, companyEmail, cnpj, employeeName, password } = data;
 
@@ -65,6 +81,21 @@ export async function register(data) {
   return result;
 }
 
+/**
+ * Realiza login do usuário e gera tokens JWT.
+ *
+ * @async
+ * @function login
+ * @param {Object} data
+ * @param {string} data.companyEmail - Email da empresa.
+ * @param {string} data.employeeName - Nome do usuário.
+ * @param {string} data.password - Senha do usuário.
+ * @param {import("express").Response} res - Response do Express (para cookie refresh token).
+ *
+ * @returns {Promise<Object>} Tokens e dados básicos do usuário.
+ *
+ * @throws {AppError} Se credenciais forem inválidas.
+ */
 export async function login(data, res) {
   const { companyEmail, employeeName, password } = data;
 
@@ -110,6 +141,17 @@ export async function login(data, res) {
   };
 }
 
+/**
+ * Gera um novo access token a partir de um refresh token válido.
+ *
+ * @async
+ * @function refresh
+ * @param {string} token - Refresh token JWT.
+ *
+ * @returns {Promise<string>} Novo access token.
+ *
+ * @throws {AppError} Se token estiver ausente ou usuário não existir.
+ */
 export async function refresh(token) {
   if (!token) {
     throw new AppError("auth:error.refresh_token_missing", 401);
@@ -128,6 +170,17 @@ export async function refresh(token) {
   return generateAccessToken(user);
 }
 
+/**
+ * Retorna dados do usuário autenticado.
+ *
+ * @async
+ * @function me
+ * @param {string} userId - ID do usuário autenticado.
+ *
+ * @returns {Promise<Object>} Dados públicos do usuário.
+ *
+ * @throws {AppError} Se usuário não for encontrado.
+ */
 export async function me(userId) {
   const user = await prisma.user.findUnique({
     where: { id: userId },
@@ -148,6 +201,15 @@ export async function me(userId) {
   return user;
 }
 
+/**
+ * Realiza logout removendo o refresh token armazenado em cookie.
+ *
+ * @async
+ * @function logout
+ * @param {import("express").Response} res - Response do Express.
+ *
+ * @returns {Object} Mensagem de sucesso.
+ */
 export async function logout(res) {
   clearRefreshCookie(res);
 
