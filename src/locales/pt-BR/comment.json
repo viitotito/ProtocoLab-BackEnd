@@ -1,13 +1,13 @@
 {
-  "success": {
-    "comment_created": "Comentário criado com sucesso.",
-    "comment_updated": "Comentário atualizado com sucesso.",
-    "comment_deleted": "Comentário apagado com sucesso."
-  },
+	"success": {
+		"comment_created": "Comentário criado com sucesso.",
+		"comment_updated": "Comentário atualizado com sucesso.",
+		"comment_deleted": "Comentário apagado com sucesso."
+	},
 
-  "error": {
-    "ticket_not_found": "Chamada não encontrada.",
-    "comment_not_found": "Comentário não encontrado.",
-    "not_allowed": "Você não é permitido realizar esta ação."
-  }
+	"error": {
+		"ticket_not_found": "Chamada não encontrada.",
+		"comment_not_found": "Comentário não encontrado.",
+		"not_allowed": "Você não é permitido realizar esta ação."
+	}
 }

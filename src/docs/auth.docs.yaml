@@ -1,7 +1,7 @@
 paths:
   /api/auth/register:
     post:
-      summary: Creates a company and the first user (Admin)
+      summary: Creates a company and the first user (Admin).
       tags:
         - Auth
 
@@ -87,7 +87,7 @@ paths:
 
   /api/auth/login:
     post:
-      summary: Logs the user in
+      summary: Logs the user in.
       tags:
         - Auth
 
@@ -142,7 +142,7 @@ paths:
 
   /api/auth/refresh:
     post:
-      summary: Generates a new Access Token using the Refresh Token
+      summary: Generates a new Access Token using the Refresh Token.
       tags:
         - Auth
 
@@ -173,7 +173,7 @@ paths:
 
   /api/auth/me:
     get:
-      summary: Returns the authenticated user's data
+      summary: Returns the authenticated user's data.
       tags:
         - Auth
 
@@ -200,7 +200,7 @@ paths:
 
   /api/auth/logout:
     post:
-      summary: Logs out the authenticated user
+      summary: Logs out the authenticated user.
       tags:
         - Auth
 

@@ -1,14 +1,14 @@
 {
-  "success": {
-    "department_created": "Departamento creado con éxito.",
-    "department_updated": "Departamento actualizado con éxito.",
-    "department_deleted": "Departamento eliminado con éxito."
-  },
+	"success": {
+		"department_created": "Departamento creado con éxito.",
+		"department_updated": "Departamento actualizado con éxito.",
+		"department_deleted": "Departamento eliminado con éxito."
+	},
 
-  "error": {
-    "department_not_found": "Departamento no encontrado.",
-    "name_exists": "Ya existe un departamento con este nombre en esta empresa.",
-    "has_users": "No se puede eliminar el departamento con usuarios vinculados.",
-    "has_tickets": "No se puede eliminar el departamento con tickets vinculados."
-  }
+	"error": {
+		"department_not_found": "Departamento no encontrado.",
+		"name_exists": "Ya existe un departamento con este nombre en esta empresa.",
+		"has_users": "No se puede eliminar el departamento con usuarios vinculados.",
+		"has_tickets": "No se puede eliminar el departamento con tickets vinculados."
+	}
 }

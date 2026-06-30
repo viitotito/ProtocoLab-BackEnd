@@ -1,7 +1,7 @@
 paths:
   /api/tickets/{id}/comments:
     post:
-      summary: Add a comment to the ticket
+      summary: Add a comment to the ticket.
       tags:
         - Comments
 
@@ -65,7 +65,7 @@ paths:
 
 
     get:
-      summary: List ticket comments
+      summary: List ticket comments.
       tags:
         - Comments
 
@@ -113,7 +113,7 @@ paths:
 
   /api/tickets/{id}/comments/{commentId}:
     patch:
-      summary: Update comment
+      summary: Update comment.
       tags:
         - Comments
 
@@ -184,7 +184,7 @@ paths:
 
 
     delete:
-      summary: Delete comment
+      summary: Delete comment.
       tags:
         - Comments
         

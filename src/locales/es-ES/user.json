@@ -1,15 +1,16 @@
 {
-  "success": {
-    "user_created": "Usuario creado con éxito.",
-    "user_updated": "Usuario actualizado con éxito.",
-    "user_deleted": "Usuario eliminado con éxito."
-  },
-  "error": {
-    "user_not_found": "Usuario no encontrado.",
-    "email_exists": "Este correo ya está en uso en esta empresa.",
-    "department_invalid": "Departamento inválido para esta empresa.",
-    "self_update": "No puedes actualizar tu propio usuario.",
-    "self_delete": "No puedes eliminar tu propio usuario.",
-    "has_dependencies": "No se puede eliminar el usuario porque tiene registros vinculados."
-  }
+	"success": {
+		"user_created": "Usuario creado con éxito.",
+		"user_updated": "Usuario actualizado con éxito.",
+		"user_deleted": "Usuario eliminado con éxito."
+	},
+
+	"error": {
+		"user_not_found": "Usuario no encontrado.",
+		"email_exists": "Este correo ya está en uso en esta empresa.",
+		"department_invalid": "Departamento inválido para esta empresa.",
+		"self_update": "No puedes actualizar tu propio usuario.",
+		"self_delete": "No puedes eliminar tu propio usuario.",
+		"has_dependencies": "No se puede eliminar el usuario porque tiene registros vinculados."
+	}
 }
