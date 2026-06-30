@@ -1,5 +1,3 @@
-import { Response } from "express";
-
 /**
  * Define o cookie de refresh token no navegador do usuário.
  *
