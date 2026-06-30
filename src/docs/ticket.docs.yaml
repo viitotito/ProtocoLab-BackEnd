@@ -1,16 +1,19 @@
 paths:
   /api/tickets:
     get:
-      summary: Lista todos os chamados da empresa
+      summary: Lists all of the company's support tickets
       tags:
         - Tickets
+
+      parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
 
       security:
         - bearerAuth: []
 
       responses:
         "200":
-          description: Lista de chamados
+          description: List of tickets
           content:
             application/json:
               schema:
@@ -19,16 +22,19 @@ paths:
                   $ref: "#/components/schemas/Ticket"
 
         "401":
-          description: Token inválido ou expirado
+          description: Invalid or expired token
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Unauthorized"
 
     post:
-      summary: Cria um novo chamado
+      summary: Create a new ticket
       tags:
         - Tickets
+
+      parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
 
       security:
         - bearerAuth: []
@@ -46,11 +52,11 @@ paths:
               properties:
                 title:
                   type: string
-                  example: Computador não liga
+                  example: Computer won't turn on
 
                 description:
                   type: string
-                  example: O computador não inicia após pressionar o botão de ligar.
+                  example: The computer does not start after pressing the power button
 
                 departmentId:
                   type: integer
@@ -66,21 +72,21 @@ paths:
 
       responses:
         "201":
-          description: Chamado criado com sucesso
+          description: Ticket successfully created
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Ticket"
 
         "400":
-          description: Erro de validação ou regra de negócio
+          description: Validation error or business rule
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ValidationError"
 
         "401":
-          description: Token inválido ou expirado
+          description: Invalid or expired token
           content:
             application/json:
               schema:
@@ -88,14 +94,15 @@ paths:
 
   /api/tickets/{id}:
     get:
-      summary: Busca um chamado pelo ID
+      summary: Search for a ticket by ID
       tags:
-        - Tickets
+        - Tickets    
 
       security:
         - bearerAuth: []
 
       parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
         - in: path
           name: id
           required: true
@@ -104,21 +111,21 @@ paths:
 
       responses:
         "200":
-          description: Chamado encontrado
+          description: Ticket found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Ticket"
 
         "404":
-          description: Chamado não encontrado
+          description: Ticket not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/MessageResponse"
 
     patch:
-      summary: Atualiza um chamado
+      summary: Updates a ticket
       tags:
         - Tickets
 
@@ -126,6 +133,7 @@ paths:
         - bearerAuth: []
 
       parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
         - in: path
           name: id
           required: true
@@ -141,11 +149,11 @@ paths:
               properties:
                 title:
                   type: string
-                  example: Computador não liga
+                  example: Computer won't turn on
 
                 description:
                   type: string
-                  example: O computador continua sem ligar.
+                  example: The computer still won't turn on
 
                 status:
                   type: string
@@ -169,28 +177,28 @@ paths:
 
       responses:
         "200":
-          description: Chamado atualizado com sucesso
+          description: Ticket successfully updated
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Ticket"
 
         "400":
-          description: Erro de validação
+          description: Validation error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ValidationError"
 
         "404":
-          description: Chamado não encontrado
+          description: Ticket not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/MessageResponse"
 
     delete:
-      summary: Remove um chamado
+      summary: Removes a ticket
       tags:
         - Tickets
 
@@ -198,6 +206,7 @@ paths:
         - bearerAuth: []
 
       parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
         - in: path
           name: id
           required: true
@@ -206,21 +215,21 @@ paths:
 
       responses:
         "200":
-          description: Chamado removido com sucesso
+          description: Ticket successfully removed
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/MessageResponse"
 
         "404":
-          description: Chamado não encontrado
+          description: Ticket not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/MessageResponse"
 
         "403":
-          description: Sem permissão para excluir chamados
+          description: No permission to delete tickets
           content:
             application/json:
               schema:

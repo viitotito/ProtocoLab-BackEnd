@@ -4,12 +4,18 @@ export async function createDepartment(req, res) {
   try {
     const department = await departmentService.createDepartment(
       req.user.companyId,
-      req.body
+      req.body,
+      req.t
     );
 
-    return res.status(201).json(department);
+    return res.status(201).json({
+      message: req.t("department:success.department_created"),
+      data: department,
+    });
   } catch (err) {
-    return res.status(400).json({ message: err.message });
+    return res.status(400).json({
+      message: err.message,
+    });
   }
 }
 
@@ -22,16 +28,19 @@ export async function listDepartments(req, res) {
 }
 
 export async function getDepartment(req, res) {
-  const department = await departmentService.getDepartmentById(
-    Number(req.params.id),
-    req.user.companyId
-  );
+  try {
+    const department = await departmentService.getDepartmentById(
+      Number(req.params.id),
+      req.user.companyId,
+      req.t
+    );
 
-  if (!department) {
-    return res.status(404).json({ message: "Departamento não encontrado." });
+    return res.json(department);
+  } catch (err) {
+    return res.status(404).json({
+      message: err.message,
+    });
   }
-
-  return res.json(department);
 }
 
 export async function updateDepartment(req, res) {
@@ -39,12 +48,18 @@ export async function updateDepartment(req, res) {
     const department = await departmentService.updateDepartment(
       Number(req.params.id),
       req.user.companyId,
-      req.body
+      req.body,
+      req.t
     );
 
-    return res.json(department);
+    return res.json({
+      message: req.t("department:success.department_updated"),
+      data: department,
+    });
   } catch (err) {
-    return res.status(400).json({ message: err.message });
+    return res.status(400).json({
+      message: err.message,
+    });
   }
 }
 
@@ -52,11 +67,14 @@ export async function deleteDepartment(req, res) {
   try {
     const result = await departmentService.deleteDepartment(
       Number(req.params.id),
-      req.user.companyId
+      req.user.companyId,
+      req.t
     );
 
     return res.json(result);
   } catch (err) {
-    return res.status(400).json({ message: err.message });
+    return res.status(400).json({
+      message: err.message,
+    });
   }
 }

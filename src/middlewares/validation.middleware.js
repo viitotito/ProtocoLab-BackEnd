@@ -1,20 +1,17 @@
-export function validate(schema) {
+export const validate = (schemaFn) => (req, res, next) => {
+  const t = req.t;
 
-    return (req, res, next) => {
+  const schema = schemaFn(t); 
 
-        const result = schema.safeParse(req.body);
+  const result = schema.safeParse(req.body);
 
-        if (!result.success) {
+  if (!result.success) {
+    return res.status(400).json({
+      message: t("common:result.invalid_fields"),
+      errors: result.error.flatten(),
+    });
+  }
 
-            return res.status(400).json({
-                message: "Erro de validação.",
-                errors: result.error.flatten().fieldErrors
-            });
-
-        }
-
-        req.body = result.data;
-
-        next();
-    };
-}
+  req.body = result.data;
+  next();
+};

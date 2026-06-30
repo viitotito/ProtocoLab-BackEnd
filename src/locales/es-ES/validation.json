@@ -1,0 +1,118 @@
+{
+	"common": {
+		"invalid_fields": "Campos inválidos"
+	},
+
+	"company": {
+		"name": {
+			"required": "El nombre de la empresa es obligatorio.",
+			"min": "El nombre de la empresa debe tener al menos 2 caracteres.",
+			"max": "El nombre de la empresa debe tener como máximo 45 caracteres."
+		},
+		"email": {
+			"required": "El email es obligatorio.",
+			"invalid": "Email inválido.",
+			"max": "El email debe tener como máximo 45 caracteres."
+		},
+		"cnpj": {
+			"required": "El CNPJ es obligatorio.",
+			"invalid": "El CNPJ debe contener exactamente 14 números."
+		},
+		"employee_name": {
+			"required": "El nombre del empleado es obligatorio.",
+			"min": "El nombre debe tener al menos 3 caracteres.",
+			"max": "El nombre debe tener como máximo 45 caracteres.",
+			"invalid": "El nombre solo debe contener letras y espacios."
+		},
+		"password": {
+			"required": "La contraseña es obligatoria.",
+			"min": "La contraseña debe tener al menos 8 caracteres.",
+			"max": "La contraseña debe tener como máximo 72 caracteres."
+		},
+		"confirm_password": {
+			"required": "La confirmación de contraseña es obligatoria.",
+			"not_match": "Las contraseñas no coinciden."
+		}
+	},
+
+	"user": {
+		"name": {
+			"required": "El nombre del usuario es obligatorio.",
+			"min": "El nombre debe tener al menos 3 caracteres.",
+			"max": "El nombre debe tener como máximo 45 caracteres.",
+			"invalid": "El nombre solo debe contener letras y espacios."
+		},
+		"email": {
+			"required": "El email del usuario es obligatorio.",
+			"invalid": "Email inválido.",
+			"max": "El email debe tener como máximo 45 caracteres."
+		},
+		"password": {
+			"required": "La contraseña es obligatoria.",
+			"min": "La contraseña debe tener al menos 8 caracteres.",
+			"max": "La contraseña debe tener como máximo 72 caracteres."
+		},
+		"role": {
+			"required": "El rol del usuario es obligatorio.",
+			"min": "El rol debe tener al menos 3 caracteres.",
+			"max": "El rol debe tener como máximo 20 caracteres."
+		},
+		"department": {
+			"required": "El departamento es obligatorio.",
+			"invalid": "El ID del departamento debe ser un número entero."
+		}
+	},
+
+	"department": {
+		"name": {
+			"required": "El nombre del departamento es obligatorio.",
+			"min": "El nombre debe tener al menos 2 caracteres.",
+			"max": "El nombre debe tener como máximo 25 caracteres."
+		},
+
+		"description": {
+			"required": "La descripción es obligatoria.",
+			"min": "La descripción debe tener al menos 5 caracteres.",
+			"max": "La descripción debe tener como máximo 80 caracteres."
+		}
+	},
+
+	"ticket": {
+		"title": {
+			"required": "El título del ticket es obligatorio.",
+			"min": "El título debe tener al menos 3 caracteres.",
+			"max": "El título debe tener como máximo 25 caracteres."
+		},
+
+		"description": {
+			"required": "La descripción del ticket es obligatoria.",
+			"min": "La descripción debe tener al menos 5 caracteres.",
+			"max": "La descripción debe tener como máximo 80 caracteres."
+		},
+
+		"department": {
+			"required": "El departamento es obligatorio.",
+			"invalid": "El ID del departamento debe ser un número entero."
+		},
+
+		"priority": {
+			"required": "La prioridad es obligatoria.",
+			"invalid": "Prioridad inválida."
+		},
+
+		"status": {
+			"invalid": "Estado inválido."
+		},
+
+		"update": {
+			"empty": "Debe informar al menos un campo para actualizar."
+		}
+	},
+
+	"comment": {
+		"description": {
+			"required": "La descripción del comentario es obligatoria.",
+			"min": "El comentario debe tener al menos 1 carácter."
+		}
+	}
+}

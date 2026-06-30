@@ -6,26 +6,33 @@ export async function listUsers(req, res) {
 }
 
 export async function getUser(req, res) {
-  const user = await userService.getUserById(
-    Number(req.params.id),
-    req.user.companyId
-  );
+  try {
+    const user = await userService.getUserById(
+      Number(req.params.id),
+      req.user.companyId,
+      req.t
+    );
 
-  if (!user) {
-    return res.status(404).json({ message: "Usuário não encontrado." });
+    return res.json(user);
+  } catch (err) {
+    return res.status(404).json({
+      message: err.message,
+    });
   }
-
-  return res.json(user);
 }
 
 export async function createUser(req, res) {
   try {
     const user = await userService.createUser(
       req.user.companyId,
-      req.body
+      req.body,
+      req.t
     );
 
-    return res.status(201).json(user);
+    return res.status(201).json({
+      message: req.t("user:success.user_created"),
+      user,
+    });
   } catch (err) {
     return res.status(400).json({
       message: err.message,
@@ -33,31 +40,38 @@ export async function createUser(req, res) {
   }
 }
 
-export const updateUser = async (req, res) => {
+export async function updateUser(req, res) {
   try {
     const user = await userService.updateUser(
       Number(req.params.id),
       req.user.companyId,
       req.user.id,
-      req.body
+      req.body,
+      req.t
     );
 
-    return res.json(user);
+    return res.json({
+      message: req.t("user:success.user_updated"),
+      user,
+    });
   } catch (err) {
-    return res.status(400).json({ message: err.message });
+    return res.status(400).json({
+      message: err.message,
+    });
   }
-};
+}
 
 export async function deleteUser(req, res) {
   try {
     await userService.deleteUser(
       Number(req.params.id),
+      req.user.companyId,
       req.user.id,
-      req.user.companyId
+      req.t
     );
 
     return res.json({
-      message: "Usuário deletado com sucesso.",
+      message: req.t("user:success.user_deleted"),
     });
   } catch (err) {
     return res.status(400).json({

@@ -1,9 +1,12 @@
 paths:
   /api/auth/register:
     post:
-      summary: Cria uma empresa e o primeiro usuário (Admin)
+      summary: Creates a company and the first user (Admin)
       tags:
         - Auth
+
+      parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
 
       requestBody:
         required: true
@@ -41,7 +44,7 @@ paths:
 
       responses:
         "201":
-          description: Empresa cadastrada com sucesso.
+          description: Company registered successfully
           content:
             application/json:
               schema:
@@ -49,7 +52,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: Empresa cadastrada com sucesso.
+                    example: Company registered successfully
                   user:
                     type: object
                     properties:
@@ -76,7 +79,7 @@ paths:
                             example: ProtocoLab
 
         "400":
-          description: Erro de validação ou regra de negócio.
+          description: Validation error or business rule violation
           content:
             application/json:
               schema:
@@ -84,9 +87,12 @@ paths:
 
   /api/auth/login:
     post:
-      summary: Realiza login do usuário.
+      summary: Logs the user in
       tags:
         - Auth
+
+      parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
 
       requestBody:
         required: true
@@ -112,7 +118,7 @@ paths:
 
       responses:
         "200":
-          description: Login realizado com sucesso.
+          description: User logged in successfully
           content:
             application/json:
               schema:
@@ -120,7 +126,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: Login realizado com sucesso.
+                    example: User logged in successfully
                   accessToken:
                     type: string
                     example: eyJhbGciOiJIUzI1NiIs...
@@ -128,7 +134,7 @@ paths:
                     $ref: "#/components/schemas/User"
 
         "401":
-          description: Credenciais inválidas.
+          description: Invalid credentials
           content:
             application/json:
               schema:
@@ -136,13 +142,16 @@ paths:
 
   /api/auth/refresh:
     post:
-      summary: Gera um novo Access Token utilizando o Refresh Token.
+      summary: Generates a new Access Token using the Refresh Token
       tags:
         - Auth
 
+      parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
+
       responses:
         "200":
-          description: Token atualizado com sucesso.
+          description: Token successfully updated
           content:
             application/json:
               schema:
@@ -150,13 +159,13 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: Token atualizado com sucesso.
+                    example: Token successfully updated
                   accessToken:
                     type: string
                     example: eyJhbGciOiJIUzI1NiIs...
 
         "401":
-          description: Refresh Token inválido ou expirado.
+          description: Invalid or expired refresh token
           content:
             application/json:
               schema:
@@ -164,23 +173,26 @@ paths:
 
   /api/auth/me:
     get:
-      summary: Retorna os dados do usuário autenticado.
+      summary: Returns the authenticated user's data
       tags:
         - Auth
+
+      parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
 
       security:
         - bearerAuth: []
 
       responses:
         "200":
-          description: Dados do usuário autenticado.
+          description: Authenticated user data
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
 
         "401":
-          description: Token inválido ou expirado.
+          description: Invalid or expired refresh token
           content:
             application/json:
               schema:
@@ -188,23 +200,26 @@ paths:
 
   /api/auth/logout:
     post:
-      summary: Realiza logout do usuário autenticado.
+      summary: Logs out the authenticated user
       tags:
         - Auth
 
+      parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
+        
       security:
         - bearerAuth: []
 
       responses:
         "200":
-          description: Logout realizado com sucesso.
+          description: Logged out successfully
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/MessageResponse"
 
         "401":
-          description: Token inválido ou usuário não autenticado.
+          description: Invalid token or unauthenticated user
           content:
             application/json:
               schema:

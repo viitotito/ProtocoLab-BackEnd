@@ -1,16 +1,19 @@
 paths:
   /api/users:
     get:
-      summary: Lista usuários da empresa
+      summary: Lists company users
       tags:
         - Users
+
+      parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
 
       security:
         - bearerAuth: []
 
       responses:
         "200":
-          description: Lista de usuários
+          description: List of users
           content:
             application/json:
               schema:
@@ -19,16 +22,19 @@ paths:
                   $ref: "#/components/schemas/User"
 
         "401":
-          description: Token inválido ou expirado
+          description: Invalid or expired token
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Unauthorized"
 
     post:
-      summary: Cria um novo usuário (somente admin)
+      summary: Creates a new user (admin only)
       tags:
         - Users
+
+      parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
 
       security:
         - bearerAuth: []
@@ -48,11 +54,11 @@ paths:
               properties:
                 name:
                   type: string
-                  example: João Silva
+                  example: John Doe
 
                 email:
                   type: string
-                  example: joao@email.com
+                  example: jhond@email.com
 
                 password:
                   type: string
@@ -68,21 +74,21 @@ paths:
 
       responses:
         "201":
-          description: Usuário criado com sucesso
+          description: User successfully created
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
 
         "400":
-          description: Erro de validação ou regra de negócio
+          description: Validation error or business rule
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ValidationError"
 
         "403":
-          description: Sem permissão
+          description: No permission
           content:
             application/json:
               schema:
@@ -90,7 +96,7 @@ paths:
 
   /api/users/{id}:
     get:
-      summary: Busca usuário por ID
+      summary: Search for user by ID
       tags:
         - Users
 
@@ -98,6 +104,7 @@ paths:
         - bearerAuth: []
 
       parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
         - in: path
           name: id
           required: true
@@ -106,17 +113,17 @@ paths:
 
       responses:
         "200":
-          description: Usuário encontrado
+          description: User found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
 
         "404":
-          description: Usuário não encontrado
+          description: User not found
 
     patch:
-      summary: Atualiza dados do usuário
+      summary: Update user information
       tags:
         - Users
 
@@ -124,6 +131,7 @@ paths:
         - bearerAuth: []
 
       parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
         - in: path
           name: id
           required: true
@@ -139,11 +147,11 @@ paths:
               properties:
                 name:
                   type: string
-                  example: Maria Silva
+                  example: Jane Doe
 
                 email:
                   type: string
-                  example: maria@email.com
+                  example: janed@email.com
 
                 password:
                   type: string
@@ -159,13 +167,13 @@ paths:
 
       responses:
         "200":
-          description: Usuário atualizado com sucesso
+          description: User successfully updated
 
         "400":
-          description: Erro de validação
+          description: Validation error
 
     delete:
-      summary: Remove usuário
+      summary: Remove user
       tags:
         - Users
 
@@ -173,6 +181,7 @@ paths:
         - bearerAuth: []
 
       parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
         - in: path
           name: id
           required: true
@@ -181,7 +190,7 @@ paths:
 
       responses:
         "200":
-          description: Usuário deletado com sucesso
+          description: User successfully deleted
 
         "404":
-          description: Usuário não encontrado
+          description: User not found

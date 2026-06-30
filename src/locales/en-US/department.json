@@ -1,0 +1,14 @@
+{
+  "success": {
+    "department_created": "Department created successfully.",
+    "department_updated": "Department updated successfully.",
+    "department_deleted": "Department deleted successfully."
+  },
+
+  "error": {
+    "department_not_found": "Department not found.",
+    "name_exists": "A department with this name already exists in this company.",
+    "has_users": "Cannot delete department with linked users.",
+    "has_tickets": "Cannot delete department with linked tickets."
+  }
+}

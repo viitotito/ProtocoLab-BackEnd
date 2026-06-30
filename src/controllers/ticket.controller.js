@@ -5,7 +5,8 @@ export async function createTicket(req, res) {
     const ticket = await ticketService.createTicket(
       req.user.companyId,
       req.user.id,
-      req.body
+      req.body,
+      req.t
     );
 
     return res.status(201).json(ticket);
@@ -32,18 +33,13 @@ export async function getTicket(req, res) {
   try {
     const ticket = await ticketService.getTicketById(
       Number(req.params.id),
-      req.user.companyId
+      req.user.companyId,
+      req.t
     );
-
-    if (!ticket) {
-      return res.status(404).json({
-        message: "Chamado não encontrado.",
-      });
-    }
 
     return res.json(ticket);
   } catch (err) {
-    return res.status(400).json({
+    return res.status(404).json({
       message: err.message,
     });
   }
@@ -54,7 +50,8 @@ export async function updateTicket(req, res) {
     const ticket = await ticketService.updateTicket(
       Number(req.params.id),
       req.user.companyId,
-      req.body
+      req.body,
+      req.t
     );
 
     return res.json(ticket);
@@ -69,7 +66,8 @@ export async function deleteTicket(req, res) {
   try {
     const result = await ticketService.deleteTicket(
       Number(req.params.id),
-      req.user.companyId
+      req.user.companyId,
+      req.t
     );
 
     return res.json(result);
@@ -85,7 +83,8 @@ export async function assignUser(req, res) {
     const assignment = await ticketService.assignUser(
       Number(req.params.id),
       Number(req.body.userId),
-      req.user.companyId
+      req.user.companyId,
+      req.t
     );
 
     return res.status(201).json(assignment);
@@ -100,7 +99,8 @@ export async function listAssignedUsers(req, res) {
   try {
     const users = await ticketService.listAssignedUsers(
       Number(req.params.id),
-      req.user.companyId
+      req.user.companyId,
+      req.t
     );
 
     return res.json(users);
@@ -116,7 +116,8 @@ export async function removeUser(req, res) {
     const result = await ticketService.removeUser(
       Number(req.params.id),
       Number(req.params.userId),
-      req.user.companyId
+      req.user.companyId,
+      req.t
     );
 
     return res.json(result);
@@ -126,4 +127,3 @@ export async function removeUser(req, res) {
     });
   }
 }
-

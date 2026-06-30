@@ -1,73 +1,52 @@
 import { z } from "zod";
 
-export const createTicketSchema = z.object({
-  title: z
-    .string({
-      required_error: "O título do chamado é obrigatório.",
+export const createTicketSchema = (t) =>
+  z.object({
+    title: z.string({
+      required_error: t("validation:ticket.title.required"),
     })
     .trim()
-    .min(3, "O título deve ter no mínimo 3 caracteres.")
-    .max(25, "O título deve ter no máximo 25 caracteres."),
+    .min(3, t("validation:ticket.title.min"))
+    .max(25, t("validation:ticket.title.max")),
 
-  description: z
-    .string({
-      required_error: "A descrição do chamado é obrigatória.",
+    description: z.string({
+      required_error: t("validation:ticket.description.required"),
     })
     .trim()
-    .min(5, "A descrição deve ter no mínimo 5 caracteres.")
-    .max(80, "A descrição deve ter no máximo 80 caracteres."),
+    .min(5, t("validation:ticket.description.min"))
+    .max(80, t("validation:ticket.description.max")),
 
-  departmentId: z
-    .number({
-      required_error: "O departamento é obrigatório.",
-    })
-    .int("O ID do departamento deve ser um número inteiro."),
+    departmentId: z.number({
+      required_error: t("validation:ticket.department.required"),
+    }).int(t("validation:ticket.department.invalid")),
 
-  priority: z.enum(["HIGH", "NORMAL", "LOW"], {
-    required_error: "A prioridade é obrigatória.",
-    errorMap: () => ({
-      message: "Prioridade inválida.",
+    priority: z.string({
+      required_error: t("validation:ticket.priority.required"),
     }),
-  }),
-});
+  });
 
-export const updateTicketSchema = z
-  .object({
-    title: z
-      .string()
+export const updateTicketSchema = (t) =>
+  z.object({
+    title: z.string()
       .trim()
-      .min(3, "O título deve ter no mínimo 3 caracteres.")
-      .max(25, "O título deve ter no máximo 25 caracteres.")
+      .min(3, t("validation:ticket.title.min"))
+      .max(25, t("validation:ticket.title.max"))
       .optional(),
 
-    description: z
-      .string()
+    description: z.string()
       .trim()
-      .min(5, "A descrição deve ter no mínimo 5 caracteres.")
-      .max(80, "A descrição deve ter no máximo 80 caracteres.")
+      .min(5, t("validation:ticket.description.min"))
+      .max(80, t("validation:ticket.description.max"))
       .optional(),
 
-    status: z
-      .enum(["OPEN", "IN_PROGRESS", "CLOSED"], {
-        errorMap: () => ({
-          message: "Status inválido.",
-        }),
-      })
-      .optional(),
+    status: z.string().optional(),
 
-    priority: z
-      .enum(["HIGH", "NORMAL", "LOW"], {
-        errorMap: () => ({
-          message: "Prioridade inválida.",
-        }),
-      })
-      .optional(),
+    priority: z.string().optional(),
 
-    departmentId: z
-      .number()
-      .int("O ID do departamento deve ser um número inteiro.")
+    departmentId: z.number()
+      .int(t("validation:ticket.department.invalid"))
       .optional(),
   })
   .refine((data) => Object.keys(data).length > 0, {
-    message: "Informe pelo menos um campo para atualização.",
+    message: t("validation:ticket.update.empty"),
   });

@@ -1,29 +1,23 @@
 import prisma from "../configs/prisma.js";
 import bcrypt from "bcrypt";
 
-export async function createUser(companyId, data) {
+export async function createUser(companyId, data, t) {
   const { name, email, password, role, departmentId } = data;
 
   const userExists = await prisma.user.findFirst({
-    where: {
-      email,
-      companyId,
-    },
+    where: { email, companyId },
   });
 
   if (userExists) {
-    throw new Error("Email já cadastrado nesta empresa.");
+    throw new Error(t("user:error.email_exists"));
   }
 
   const department = await prisma.department.findFirst({
-    where: {
-      id: departmentId,
-      companyId,
-    },
+    where: { id: departmentId, companyId },
   });
 
   if (!department) {
-    throw new Error("Departamento inválido para esta empresa.");
+    throw new Error(t("user:error.department_invalid"));
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -60,12 +54,9 @@ export async function listUsers(companyId) {
   });
 }
 
-export async function getUserById(id, companyId) {
-  return prisma.user.findFirst({
-    where: {
-      id,
-      companyId,
-    },
+export async function getUserById(id, companyId, t) {
+  const user = await prisma.user.findFirst({
+    where: { id, companyId },
     select: {
       id: true,
       name: true,
@@ -73,18 +64,21 @@ export async function getUserById(id, companyId) {
       role: true,
       departmentId: true,
       department: {
-        select: {
-          id: true,
-          name: true,
-        },
+        select: { id: true, name: true },
       },
     },
   });
+
+  if (!user) {
+    throw new Error(t("user:error.user_not_found"));
+  }
+
+  return user;
 }
 
-export async function updateUser(id, companyId, loggedUserId, data) {
+export async function updateUser(id, companyId, loggedUserId, data, t) {
   if (id === loggedUserId) {
-    throw new Error("Você não pode alterar seu próprio usuário.");
+    throw new Error(t("user:error.self_update"));
   }
 
   const updateData = { ...data };
@@ -94,32 +88,27 @@ export async function updateUser(id, companyId, loggedUserId, data) {
   }
 
   if (updateData.email) {
-  const emailExists = await prisma.user.findFirst({
-    where: {
-      email: updateData.email,
-      companyId,
-      NOT: {
-        id,
+    const emailExists = await prisma.user.findFirst({
+      where: {
+        email: updateData.email,
+        companyId,
+        NOT: { id },
       },
-    },
-  });
+    });
 
-  if (emailExists) {
-    throw new Error("Este e-mail já está em uso nesta empresa.");
+    if (emailExists) {
+      throw new Error(t("user:error.email_exists"));
+    }
   }
-}
+
   const result = await prisma.user.updateMany({
-    where: {
-      id,
-      companyId,
-    },
+    where: { id, companyId },
     data: updateData,
   });
 
   if (result.count === 0) {
-    throw new Error("Usuário não encontrado.");
+    throw new Error(t("user:error.user_not_found"));
   }
-
 
   return prisma.user.findFirst({
     where: { id, companyId },
@@ -133,21 +122,31 @@ export async function updateUser(id, companyId, loggedUserId, data) {
   });
 }
 
-export async function deleteUser(id, companyId, loggedUserId) {
+export async function deleteUser(id, companyId, loggedUserId, t) {
   if (id === loggedUserId) {
-    throw new Error("Você não pode deletar seu próprio usuário.");
+    throw new Error(t("user:error.self_delete"));
   }
 
-  const deleted = await prisma.user.deleteMany({
-    where: {
-      id,
-      companyId,
-    },
-  });
+  try {
+    const deleted = await prisma.user.deleteMany({
+      where: {
+        id,
+        companyId,
+      },
+    });
 
-  if (deleted.count === 0) {
-    throw new Error("Usuário não encontrado.");
+    if (deleted.count === 0) {
+      throw new Error(t("user:error.user_not_found"));
+    }
+
+    return {
+      message: t("user:success.user_deleted"),
+    };
+  } catch (err) {
+    if (err.code === "P2003") {
+      throw new Error(t("user:error.has_dependencies"));
+    }
+
+    throw err;
   }
-
-  return { message: "Usuário deletado com sucesso." };
 }

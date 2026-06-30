@@ -1,0 +1,8 @@
+{
+	"result": {
+		"success": "Operação realizada com sucesso",
+		"error": "Ocorreu um erro",
+		"invalid_fields": "Campos inválidos",
+		"not_found": "Recurso não encontrado"
+	}
+}

@@ -1,0 +1,18 @@
+{
+  "success": {
+    "ticket_created": "Ticket created successfully.",
+    "ticket_updated": "Ticket updated successfully.",
+    "ticket_deleted": "Ticket deleted successfully.",
+    "user_assigned": "User assigned successfully.",
+    "user_removed": "User removed successfully."
+  },
+  "error": {
+    "ticket_not_found": "Ticket not found.",
+    "department_invalid": "Invalid department for this company.",
+    "user_not_found": "User not found.",
+    "already_assigned": "User already assigned to this ticket.",
+    "assignment_not_found": "Assignment not found.",
+    "invalid_priority": "Invalid priority.",
+    "invalid_status": "Invalid status."
+  }
+}

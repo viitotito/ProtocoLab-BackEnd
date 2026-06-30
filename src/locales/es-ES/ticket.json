@@ -1,0 +1,18 @@
+{
+  "success": {
+    "ticket_created": "Ticket creado con éxito.",
+    "ticket_updated": "Ticket actualizado con éxito.",
+    "ticket_deleted": "Ticket eliminado con éxito.",
+    "user_assigned": "Usuario asignado con éxito.",
+    "user_removed": "Usuario eliminado con éxito."
+  },
+  "error": {
+    "ticket_not_found": "Ticket no encontrado.",
+    "department_invalid": "Departamento inválido para esta empresa.",
+    "user_not_found": "Usuario no encontrado.",
+    "already_assigned": "Usuario ya asignado a este ticket.",
+    "assignment_not_found": "Asignación no encontrada.",
+    "invalid_priority": "Prioridad inválida.",
+    "invalid_status": "Estado inválido."
+  }
+}

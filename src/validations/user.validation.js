@@ -2,79 +2,81 @@ import { z } from "zod";
 
 const userNameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$/;
 
-export const createUserSchema = z.object({
-  name: z
-    .string({
-      required_error: "O nome do usuário é obrigatório.",
-    })
-    .trim()
-    .min(3, "O nome deve ter no mínimo 3 caracteres.")
-    .max(45, "O nome deve ter no máximo 45 caracteres.")
-    .regex(userNameRegex, "O nome deve conter apenas letras e espaços."),
+export const createUserSchema = (t) =>
+  z.object({
+    name: z
+      .string({
+        required_error: t("validation:user.name.required"),
+      })
+      .trim()
+      .min(3, t("validation:user.name.min"))
+      .max(45, t("validation:user.name.max"))
+      .regex(userNameRegex, t("validation:user.name.invalid")),
 
-  email: z
-    .string({
-      required_error: "O e-mail do usuário é obrigatório.",
-    })
-    .trim()
-    .email("Informe um e-mail válido.")
-    .max(45, "O e-mail deve ter no máximo 45 caracteres."),
+    email: z
+      .string({
+        required_error: t("validation:user.email.required"),
+      })
+      .trim()
+      .email(t("validation:user.email.invalid"))
+      .max(45, t("validation:user.email.max")),
 
-  password: z
-    .string({
-      required_error: "A senha é obrigatória.",
-    })
-    .trim()
-    .min(8, "A senha deve ter no mínimo 8 caracteres.")
-    .max(72, "A senha deve ter no máximo 72 caracteres."),
+    password: z
+      .string({
+        required_error: t("validation:user.password.required"),
+      })
+      .trim()
+      .min(8, t("validation:user.password.min"))
+      .max(72, t("validation:user.password.max")),
 
-  role: z
-    .string({
-      required_error: "O papel (role) do usuário é obrigatório.",
-    })
-    .trim()
-    .min(3, "O papel deve ter no mínimo 3 caracteres.")
-    .max(20, "O papel deve ter no máximo 20 caracteres."),
+    role: z
+      .string({
+        required_error: t("validation:user.role.required"),
+      })
+      .trim()
+      .min(3, t("validation:user.role.min"))
+      .max(20, t("validation:user.role.max")),
 
-  departmentId: z
-    .number({
-      required_error: "O departamento é obrigatório.",
-    })
-    .int("O ID do departamento deve ser um número inteiro."),
-});
+    departmentId: z
+      .number({
+        required_error: t("validation:user.department.required"),
+      })
+      .int(t("validation:user.department.invalid")),
+  });
 
-export const updateUserSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(3, "O nome deve ter no mínimo 3 caracteres.")
-    .max(45, "O nome deve ter no máximo 45 caracteres.")
-    .regex(userNameRegex, "O nome deve conter apenas letras e espaços.")
-    .optional(),
+export const updateUserSchema = (t) =>
+  z.object({
+    name: z
+      .string()
+      .trim()
+      .min(3, t("validation:user.name.min"))
+      .max(45, t("validation:user.name.max"))
+      .regex(userNameRegex, t("validation:user.name.invalid"))
+      .optional(),
 
-  email: z
-    .string()
-    .trim()
-    .email("Informe um e-mail válido.")
-    .max(45, "O e-mail deve ter no máximo 45 caracteres.")
-    .optional(),
+    email: z
+      .string()
+      .trim()
+      .email(t("validation:user.email.invalid"))
+      .max(45, t("validation:user.email.max"))
+      .optional(),
 
-  password: z
-    .string()
-    .trim()
-    .min(8, "A senha deve ter no mínimo 8 caracteres.")
-    .max(72, "A senha deve ter no máximo 72 caracteres.")
-    .optional(),
+    password: z
+      .string()
+      .trim()
+      .min(8, t("validation:user.password.min"))
+      .max(72, t("validation:user.password.max"))
+      .optional(),
 
-  role: z
-    .string()
-    .trim()
-    .min(3, "O papel deve ter no mínimo 3 caracteres.")
-    .max(20, "O papel deve ter no máximo 20 caracteres.")
-    .optional(),
+    role: z
+      .string()
+      .trim()
+      .min(3, t("validation:user.role.min"))
+      .max(20, t("validation:user.role.max"))
+      .optional(),
 
-  departmentId: z
-    .number()
-    .int("O ID do departamento deve ser um número inteiro.")
-    .optional(),
-});
+    departmentId: z
+      .number()
+      .int(t("validation:user.department.invalid"))
+      .optional(),
+  });

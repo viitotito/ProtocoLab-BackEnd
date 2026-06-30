@@ -40,6 +40,7 @@ CREATE TABLE `tickets` (
     `title` VARCHAR(25) NOT NULL,
     `description` VARCHAR(80) NOT NULL,
     `status` ENUM('OPEN', 'IN_PROGRESS', 'CLOSED') NOT NULL DEFAULT 'OPEN',
+    `priority` ENUM('HIGH', 'NORMAL', 'LOW') NOT NULL DEFAULT 'NORMAL',
     `opening` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `completion` DATETIME(3) NULL,
     `departmentId` INTEGER NOT NULL,

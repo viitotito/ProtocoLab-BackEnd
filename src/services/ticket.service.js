@@ -1,6 +1,9 @@
 import prisma from "../configs/prisma.js";
 
-export async function createTicket(companyId, ownerId, data) {
+const PRIORITIES = ["HIGH", "NORMAL", "LOW"];
+const STATUS = ["OPEN", "IN_PROGRESS", "CLOSED"];
+
+export async function createTicket(companyId, ownerId, data, t) {
   const { title, description, departmentId, priority } = data;
 
   const department = await prisma.department.findFirst({
@@ -11,7 +14,11 @@ export async function createTicket(companyId, ownerId, data) {
   });
 
   if (!department) {
-    throw new Error("Departamento inválido para esta empresa.");
+    throw new Error(t("ticket:error.department_invalid"));
+  }
+
+  if (!PRIORITIES.includes(priority)) {
+    throw new Error(t("ticket:error.invalid_priority"));
   }
 
   return prisma.ticket.create({
@@ -20,14 +27,14 @@ export async function createTicket(companyId, ownerId, data) {
       description,
       ownerId,
       departmentId,
-      priority, 
+      priority,
     },
     select: {
       id: true,
       title: true,
       description: true,
       status: true,
-      priority: true, 
+      priority: true,
       opening: true,
       completion: true,
 
@@ -87,8 +94,8 @@ export async function listTickets(companyId) {
   });
 }
 
-export async function getTicketById(id, companyId) {
-  return prisma.ticket.findFirst({
+export async function getTicketById(id, companyId, t) {
+  const ticket = await prisma.ticket.findFirst({
     where: {
       id,
       department: {
@@ -135,13 +142,18 @@ export async function getTicketById(id, companyId) {
       },
     },
   });
+
+  if (!ticket) {
+    throw new Error(t("ticket:error.ticket_not_found"));
+  }
+
+  return ticket;
 }
 
-export async function updateTicket(id, companyId, data) {
+export async function updateTicket(id, companyId, data, t) {
   const ticket = await prisma.ticket.findFirst({
     where: {
       id,
-
       department: {
         companyId,
       },
@@ -149,7 +161,7 @@ export async function updateTicket(id, companyId, data) {
   });
 
   if (!ticket) {
-    throw new Error("Chamado não encontrado.");
+    throw new Error(t("ticket:error.ticket_not_found"));
   }
 
   if (data.departmentId) {
@@ -161,8 +173,16 @@ export async function updateTicket(id, companyId, data) {
     });
 
     if (!department) {
-      throw new Error("Departamento inválido.");
+      throw new Error(t("ticket:error.department_invalid"));
     }
+  }
+
+  if (data.priority && !PRIORITIES.includes(data.priority)) {
+    throw new Error(t("ticket:error.invalid_priority"));
+  }
+
+  if (data.status && !STATUS.includes(data.status)) {
+    throw new Error(t("ticket:error.invalid_status"));
   }
 
   const updateData = { ...data };
@@ -176,20 +196,22 @@ export async function updateTicket(id, companyId, data) {
   }
 
   await prisma.ticket.update({
-    where: {
-      id,
-    },
+    where: { id },
     data: updateData,
   });
 
-  return getTicketById(id, companyId);
+  return prisma.ticket.findFirst({
+    where: {
+      id,
+      department: { companyId },
+    },
+  });
 }
 
-export async function deleteTicket(id, companyId) {
+export async function deleteTicket(id, companyId, t) {
   const deleted = await prisma.ticket.deleteMany({
     where: {
       id,
-
       department: {
         companyId,
       },
@@ -197,15 +219,15 @@ export async function deleteTicket(id, companyId) {
   });
 
   if (deleted.count === 0) {
-    throw new Error("Chamado não encontrado.");
+    throw new Error(t("ticket:error.ticket_not_found"));
   }
 
   return {
-    message: "Chamado deletado com sucesso.",
+    message: t("ticket:success.ticket_deleted"),
   };
 }
 
-export async function assignUser(ticketId, userId, companyId) {
+export async function assignUser(ticketId, userId, companyId, t) {
   const ticket = await prisma.ticket.findFirst({
     where: {
       id: ticketId,
@@ -216,7 +238,7 @@ export async function assignUser(ticketId, userId, companyId) {
   });
 
   if (!ticket) {
-    throw new Error("Ticket não encontrado.");
+    throw new Error(t("ticket:error.ticket_not_found"));
   }
 
   const user = await prisma.user.findFirst({
@@ -227,10 +249,10 @@ export async function assignUser(ticketId, userId, companyId) {
   });
 
   if (!user) {
-    throw new Error("Usuário não encontrado.");
+    throw new Error(t("ticket:error.user_not_found"));
   }
 
-  const assignmentExists = await prisma.ticketAssignment.findUnique({
+  const exists = await prisma.ticketAssignment.findUnique({
     where: {
       ticketId_userId: {
         ticketId,
@@ -239,8 +261,8 @@ export async function assignUser(ticketId, userId, companyId) {
     },
   });
 
-  if (assignmentExists) {
-    throw new Error("Usuário já está atribuído a este ticket.");
+  if (exists) {
+    throw new Error(t("ticket:error.already_assigned"));
   }
 
   return prisma.ticketAssignment.create({
@@ -263,7 +285,7 @@ export async function assignUser(ticketId, userId, companyId) {
   });
 }
 
-export async function listAssignedUsers(ticketId, companyId) {
+export async function listAssignedUsers(ticketId, companyId, t) {
   const ticket = await prisma.ticket.findFirst({
     where: {
       id: ticketId,
@@ -289,13 +311,13 @@ export async function listAssignedUsers(ticketId, companyId) {
   });
 
   if (!ticket) {
-    throw new Error("Ticket não encontrado.");
+    throw new Error(t("ticket:error.ticket_not_found"));
   }
 
-  return ticket.assignees.map((assignment) => assignment.user);
+  return ticket.assignees.map((a) => a.user);
 }
 
-export async function removeUser(ticketId, userId, companyId) {
+export async function removeUser(ticketId, userId, companyId, t) {
   const ticket = await prisma.ticket.findFirst({
     where: {
       id: ticketId,
@@ -306,7 +328,7 @@ export async function removeUser(ticketId, userId, companyId) {
   });
 
   if (!ticket) {
-    throw new Error("Ticket não encontrado.");
+    throw new Error(t("ticket:error.ticket_not_found"));
   }
 
   const assignment = await prisma.ticketAssignment.findUnique({
@@ -319,7 +341,7 @@ export async function removeUser(ticketId, userId, companyId) {
   });
 
   if (!assignment) {
-    throw new Error("Atribuição não encontrada.");
+    throw new Error(t("ticket:error.assignment_not_found"));
   }
 
   await prisma.ticketAssignment.delete({
@@ -332,6 +354,6 @@ export async function removeUser(ticketId, userId, companyId) {
   });
 
   return {
-    message: "Usuário removido do ticket com sucesso.",
+    message: t("ticket:success.user_removed"),
   };
 }

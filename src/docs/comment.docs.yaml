@@ -1,7 +1,7 @@
 paths:
   /api/tickets/{id}/comments:
     post:
-      summary: Criar comentário no ticket
+      summary: Add a comment to the ticket
       tags:
         - Comments
 
@@ -9,12 +9,13 @@ paths:
         - bearerAuth: []
 
       parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
         - in: path
           name: id
           required: true
           schema:
             type: integer
-          description: ID do ticket
+          description: Ticket ID
 
       requestBody:
         required: true
@@ -27,11 +28,11 @@ paths:
               properties:
                 description:
                   type: string
-                  example: "O problema ainda está ocorrendo."
+                  example: The problem is still occurring
 
       responses:
         "201":
-          description: Comentário criado com sucesso
+          description: Comment successfully created
           content:
             application/json:
               schema:
@@ -54,17 +55,17 @@ paths:
                         type: string
 
         "400":
-          description: Erro de validação ou regra de negócio
+          description: Validation error or business rule
 
         "401":
-          description: Não autenticado
+          description: Not authenticated
 
         "404":
-          description: Ticket não encontrado
+          description: Ticket not found
 
 
     get:
-      summary: Listar comentários do ticket
+      summary: List ticket comments
       tags:
         - Comments
 
@@ -72,16 +73,17 @@ paths:
         - bearerAuth: []
 
       parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
         - in: path
           name: id
           required: true
           schema:
             type: integer
-          description: ID do ticket
+          description: Ticket ID
 
       responses:
         "200":
-          description: Lista de comentários
+          description: List of comments
           content:
             application/json:
               schema:
@@ -106,12 +108,12 @@ paths:
                           type: string
 
         "404":
-          description: Ticket não encontrado
+          description: Ticket not found
 
 
   /api/tickets/{id}/comments/{commentId}:
     patch:
-      summary: Atualizar comentário
+      summary: Update comment
       tags:
         - Comments
 
@@ -119,19 +121,20 @@ paths:
         - bearerAuth: []
 
       parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
         - in: path
           name: id
           required: true
           schema:
             type: integer
-          description: ID do ticket
+          description: Ticket ID
 
         - in: path
           name: commentId
           required: true
           schema:
             type: integer
-          description: ID do comentário
+          description: Comment ID
 
       requestBody:
         required: true
@@ -144,11 +147,11 @@ paths:
               properties:
                 description:
                   type: string
-                  example: "Atualizando comentário após verificação."
+                  example: Updating comment after verification
 
       responses:
         "200":
-          description: Comentário atualizado com sucesso
+          description: Comment successfully updated
           content:
             application/json:
               schema:
@@ -171,41 +174,42 @@ paths:
                         type: string
 
         "400":
-          description: Erro de validação
+          description: Validation error
 
         "403":
-          description: Sem permissão para editar
+          description: No permission to edit
 
         "404":
-          description: Comentário não encontrado
+          description: Comment not found
 
 
     delete:
-      summary: Deletar comentário
+      summary: Delete comment
       tags:
         - Comments
-
+        
       security:
         - bearerAuth: []
 
       parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
         - in: path
           name: id
           required: true
           schema:
             type: integer
-          description: ID do ticket
+          description: Ticket ID
 
         - in: path
           name: commentId
           required: true
           schema:
             type: integer
-          description: ID do comentário
+          description: Comment ID
 
       responses:
         "200":
-          description: Comentário deletado com sucesso
+          description: Comment successfully deleted
           content:
             application/json:
               schema:
@@ -213,10 +217,10 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: Comentário deletado com sucesso.
+                    example: Comment successfully deleted
 
         "403":
-          description: Sem permissão para deletar
+          description: No permission to delete
 
         "404":
-          description: Comentário não encontrado
+          description: Comment not found

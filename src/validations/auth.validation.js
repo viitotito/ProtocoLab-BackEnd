@@ -3,76 +3,79 @@ import { z } from "zod";
 const cnpjRegex = /^\d{14}$/;
 const employeeNameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$/;
 
-export const registerSchema = z.object({
-        companyName: z
-            .string({
-                required_error: "Nome da empresa é obrigatório.",
-            })
-            .trim()
-            .min(2, "Nome da empresa deve possuir pelo menos 2 caracteres.")
-            .max(45, "Nome da empresa deve possuir no máximo 45 caracteres."),
+export const registerSchema = (t) =>
+  z
+    .object({
+      companyName: z
+        .string({
+          required_error: t("validation:company.name.required"),
+        })
+        .trim()
+        .min(2, t("validation:company.name.min"))
+        .max(45, t("validation:company.name.max")),
 
-        companyEmail: z
-            .string({
-                required_error: "Email da empresa é obrigatório.",
-            })
-            .trim()
-            .email("Email da empresa inválido.")
-            .max(45, "Email da empresa deve possuir no máximo 45 caracteres."),
+      companyEmail: z
+        .string({
+          required_error: t("validation:company.email.required"),
+        })
+        .trim()
+        .email(t("validation:company.email.invalid"))
+        .max(45, t("validation:company.email.max")),
 
-        cnpj: z
-            .string({
-                required_error: "CNPJ é obrigatório.",
-            })
-            .regex(cnpjRegex, "CNPJ deve conter exatamente 14 números."),
+      cnpj: z
+        .string({
+          required_error: t("validation:company.cnpj.required"),
+        })
+        .regex(cnpjRegex, t("validation:company.cnpj.invalid")),
 
-        employeeName: z
-            .string({
-                required_error: "Nome do funcionário é obrigatório.",
-            })
-            .trim()
-            .min(3, "Nome deve possuir pelo menos 3 caracteres.")
-            .max(45, "Nome deve possuir no máximo 45 caracteres.")
-            .regex(employeeNameRegex, "Nome deve conter apenas letras e espaços."),
+      employeeName: z
+        .string({
+          required_error: t("validation:company.employee_name.required"),
+        })
+        .trim()
+        .min(3, t("validation:company.employee_name.min"))
+        .max(45, t("validation:company.employee_name.max"))
+        .regex(employeeNameRegex, t("validation:company.employee_name.invalid")),
 
-        password: z
-            .string({
-                required_error: "Senha é obrigatória.",
-            })
-            .min(8, "Senha deve possuir pelo menos 8 caracteres.")
-            .max(72, "Senha deve possuir no máximo 72 caracteres."),
+      password: z
+        .string({
+          required_error: t("validation:company.password.required"),
+        })
+        .min(8, t("validation:company.password.min"))
+        .max(72, t("validation:company.password.max")),
 
-        confirmPassword: z.string({
-            required_error: "Confirmação de senha é obrigatória.",
-        }),
+      confirmPassword: z.string({
+        required_error: t("validation:company.confirm_password.required"),
+      }),
     })
     .refine((data) => data.password === data.confirmPassword, {
-        path: ["confirmPassword"],
-        message: "As senhas não coincidem.",
+      path: ["confirmPassword"],
+      message: t("validation:company.confirm_password.not_match"),
     });
 
-export const loginSchema = z.object({
+export const loginSchema = (t) =>
+  z.object({
     companyEmail: z
-        .string({
-            required_error: "Email da empresa é obrigatório.",
-        })
-        .trim()
-        .email("Email inválido.")
-        .max(45, "Email deve possuir no máximo 45 caracteres."),
+      .string({
+        required_error: t("validation:company.email.required"),
+      })
+      .trim()
+      .email(t("validation:company.email.invalid"))
+      .max(45, t("validation:company.email.max")),
 
     employeeName: z
-        .string({
-            required_error: "Nome do funcionário é obrigatório.",
-        })
-        .trim()
-        .min(3, "Nome deve possuir pelo menos 3 caracteres.")
-        .max(45, "Nome deve possuir no máximo 45 caracteres.")
-        .regex(employeeNameRegex, "Nome deve conter apenas letras e espaços."),
+      .string({
+        required_error: t("validation:company.employee_name.required"),
+      })
+      .trim()
+      .min(3, t("validation:company.employee_name.min"))
+      .max(45, t("validation:company.employee_name.max"))
+      .regex(employeeNameRegex, t("validation:company.employee_name.invalid")),
 
     password: z
-        .string({
-            required_error: "Senha é obrigatória.",
-        })
-        .min(8, "Senha deve possuir pelo menos 8 caracteres.")
-        .max(72, "Senha deve possuir no máximo 72 caracteres."),
-});
+      .string({
+        required_error: t("validation:company.password.required"),
+      })
+      .min(8, t("validation:company.password.min"))
+      .max(72, t("validation:company.password.max")),
+  });

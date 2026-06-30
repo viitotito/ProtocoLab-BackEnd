@@ -1,5 +1,4 @@
 import prisma from "../configs/prisma.js";
-
 import { verifyAccessToken } from "../utils/jwt.js";
 
 export async function authMiddleware(req, res, next) {
@@ -8,7 +7,7 @@ export async function authMiddleware(req, res, next) {
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({
-        message: "Token de acesso não informado.",
+        message: req.t("middleware:token.missing"),
       });
     }
 
@@ -18,14 +17,12 @@ export async function authMiddleware(req, res, next) {
 
     const user = await prisma.user.findUnique({
       where: { id: payload.sub },
-      include: {
-        department: true,
-      },
+      include: { department: true },
     });
 
     if (!user) {
       return res.status(401).json({
-        message: "Usuário não encontrado.",
+        message: req.t("middleware:user.not_found"),
       });
     }
 
@@ -35,13 +32,13 @@ export async function authMiddleware(req, res, next) {
       role: user.role,
       name: user.name,
       departmentId: user.departmentId,
-      departmentName: user.department.name,
+      departmentName: user.department?.name,
     };
 
     next();
   } catch (err) {
     return res.status(401).json({
-      message: "Token de acesso inválido ou expirado.",
+      message: req.t("middleware:token.invalid"),
     });
   }
 }
