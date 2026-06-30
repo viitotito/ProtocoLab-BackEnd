@@ -1,5 +1,5 @@
 paths:
-  /api/tickets/{ticketId}/assignees:
+  /api/tickets/{id}/assignees:
     post:
       summary: Assigns a collaborator to the ticket.
       tags:
@@ -11,11 +11,11 @@ paths:
       parameters:
         - $ref: "#/components/parameters/AcceptLanguage"
         - in: path
-          name: ticketId
+          name: id
           required: true
           schema:
             type: integer
-          example: 1
+          description: Ticket ID
 
       requestBody:
         required: true
@@ -50,21 +50,28 @@ paths:
                     $ref: "#/components/schemas/User"
 
         "400":
-          description: Validation or business rule error
+          description: Validation error or business rule
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ValidationError"
 
         "401":
-          description: Invalid or expired token
+          description: Invalid or expired access token
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Unauthorized"
 
         "403":
-          description: No permission.
+          description: No permission
+
+        "404":
+          description: Ticket or user not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
 
     get:
       summary: Lists the employees assigned to the ticket.
@@ -77,11 +84,11 @@ paths:
       parameters:
         - $ref: "#/components/parameters/AcceptLanguage"
         - in: path
-          name: ticketId
+          name: id
           required: true
           schema:
             type: integer
-          example: 1
+          description: Ticket ID
 
       responses:
         "200":
@@ -93,6 +100,20 @@ paths:
                 items:
                   $ref: "#/components/schemas/User"
 
+        "400":
+          description: Validation error or business rule
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+        "401":
+          description: Invalid or expired access token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+
         "404":
           description: Ticket not found
           content:
@@ -100,7 +121,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/MessageResponse"
 
-  /api/tickets/{ticketId}/assignees/{userId}:
+  /api/tickets/{id}/assignees/{userId}:
     delete:
       summary: Removes a collaborator from the ticket.
       tags:
@@ -112,18 +133,18 @@ paths:
       parameters:
         - $ref: "#/components/parameters/AcceptLanguage"
         - in: path
-          name: ticketId
+          name: id
           required: true
           schema:
             type: integer
-          example: 1
+          description: Ticket ID
 
         - in: path
           name: userId
           required: true
           schema:
             type: integer
-          example: 5
+          description: User ID
 
       responses:
         "200":
@@ -133,15 +154,15 @@ paths:
               schema:
                 $ref: "#/components/schemas/MessageResponse"
 
-        "404":
-          description: Assignment not found
+        "400":
+          description: Validation error or business rule
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/MessageResponse"
+                $ref: "#/components/schemas/ValidationError"
 
         "401":
-          description: Invalid or expired token
+          description: Invalid or expired access token
           content:
             application/json:
               schema:
@@ -149,3 +170,10 @@ paths:
 
         "403":
           description: No permission
+
+        "404":
+          description: Assignment not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"

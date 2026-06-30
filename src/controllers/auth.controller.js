@@ -74,7 +74,6 @@ export async function logout(req, res) {
 
     return res.status(200).json({
       message: req.t("auth:success.logout_success"),
-      ...result,
     });
 
   } catch (err) {

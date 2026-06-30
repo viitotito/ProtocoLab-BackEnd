@@ -142,7 +142,7 @@ paths:
 
   /api/auth/refresh:
     post:
-      summary: Generates a new Access Token using the Refresh Token.
+      summary: Generates a new Access Token using the Refresh Token stored in the HttpOnly cookie.
       tags:
         - Auth
 
@@ -197,6 +197,9 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Unauthorized"
+
+        "404":
+          description: User not found
 
   /api/auth/logout:
     post:

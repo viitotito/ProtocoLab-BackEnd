@@ -26,7 +26,7 @@ export async function listDepartments(req, res) {
       req.user.companyId
     );
 
-    return res.status(200).json(comments);
+    return res.status(200).json(departments);
 
   } catch (err) {
 
