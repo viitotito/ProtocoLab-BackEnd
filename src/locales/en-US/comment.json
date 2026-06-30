@@ -1,13 +1,13 @@
 {
-  "success": {
-    "comment_created": "Comment created successfully.",
-    "comment_updated": "Comment updated successfully.",
-    "comment_deleted": "Comment deleted successfully."
-  },
+	"success": {
+		"comment_created": "Comment created successfully.",
+		"comment_updated": "Comment updated successfully.",
+		"comment_deleted": "Comment deleted successfully."
+	},
 
-  "error": {
-    "ticket_not_found": "Ticket not found.",
-    "comment_not_found": "Comment not found.",
-    "not_allowed": "You are not allowed to perform this action."
-  }
+	"error": {
+		"ticket_not_found": "Ticket not found.",
+		"comment_not_found": "Comment not found.",
+		"not_allowed": "You are not allowed to perform this action."
+	}
 }

@@ -4,7 +4,7 @@ paths:
       summary: Lists the company's departments
       tags:
         - Departments
-      
+
       parameters:
         - $ref: "#/components/parameters/AcceptLanguage"
 
@@ -70,6 +70,45 @@ paths:
 
         "403":
           description: No permission
+
+  /api/departments/{id}/users:
+    get:
+      summary: List users by department
+      tags:
+        - Departments
+
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
+
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: Department ID
+
+      responses:
+        "200":
+          description: Users from the department
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+
+        "404":
+          description: Department not found
+
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
 
   /api/departments/{id}:
     get:

@@ -27,6 +27,22 @@ export async function listDepartments(req, res) {
   return res.json(departments);
 }
 
+export async function listUsersByDepartment(req, res) {
+  try {
+    const users = await departmentService.listUsersByDepartment(
+      Number(req.params.id),
+      req.user.companyId,
+      req.t
+    );
+
+    return res.json(users);
+  } catch (err) {
+    return res.status(400).json({
+      message: err.message,
+    });
+  }
+}
+
 export async function getDepartment(req, res) {
   try {
     const department = await departmentService.getDepartmentById(
