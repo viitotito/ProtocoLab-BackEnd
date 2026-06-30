@@ -1,7 +1,7 @@
 paths:
   /api/departments:
     get:
-      summary: Lists the company's departments
+      summary: Lists the company's departments.
       tags:
         - Departments
 
@@ -29,7 +29,7 @@ paths:
                 $ref: "#/components/schemas/Unauthorized"
 
     post:
-      summary: Creates a department
+      summary: Creates a department.
       tags:
         - Departments
 
@@ -73,7 +73,7 @@ paths:
 
   /api/departments/{id}/users:
     get:
-      summary: List users by department
+      summary: List users by department.
       tags:
         - Departments
 
@@ -112,7 +112,7 @@ paths:
 
   /api/departments/{id}:
     get:
-      summary: Search for a department by ID
+      summary: Search for a department by ID.
       tags:
         - Departments
 
@@ -139,7 +139,7 @@ paths:
           description: Department not found
 
     patch:
-      summary: Updates department
+      summary: Updates department.
       tags:
         - Departments
 
@@ -177,7 +177,7 @@ paths:
           description: Department not found
 
     delete:
-      summary: Remove department
+      summary: Remove department.
       tags:
         - Departments
 

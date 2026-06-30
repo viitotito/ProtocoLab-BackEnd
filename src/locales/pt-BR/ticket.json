@@ -1,18 +1,19 @@
 {
-  "success": {
-    "ticket_created": "Chamado criado com sucesso.",
-    "ticket_updated": "Chamado atualizado com sucesso.",
-    "ticket_deleted": "Chamado deletado com sucesso.",
-    "user_assigned": "Usuário atribuído ao chamado com sucesso.",
-    "user_removed": "Usuário removido do chamado com sucesso."
-  },
-  "error": {
-    "ticket_not_found": "Chamado não encontrado.",
-    "department_invalid": "Departamento inválido para esta empresa.",
-    "user_not_found": "Usuário não encontrado.",
-    "already_assigned": "Usuário já está atribuído a este ticket.",
-    "assignment_not_found": "Atribuição não encontrada.",
-    "invalid_priority": "Prioridade inválida.",
-    "invalid_status": "Status inválido."
-  }
+	"success": {
+		"ticket_created": "Chamado criado com sucesso.",
+		"ticket_updated": "Chamado atualizado com sucesso.",
+		"ticket_deleted": "Chamado deletado com sucesso.",
+		"user_assigned": "Usuário atribuído ao chamado com sucesso.",
+		"user_removed": "Usuário removido do chamado com sucesso."
+	},
+
+	"error": {
+		"ticket_not_found": "Chamado não encontrado.",
+		"department_invalid": "Departamento inválido para esta empresa.",
+		"user_not_found": "Usuário não encontrado.",
+		"already_assigned": "Usuário já está atribuído a este ticket.",
+		"assignment_not_found": "Atribuição não encontrada.",
+		"invalid_priority": "Prioridade inválida.",
+		"invalid_status": "Status inválido."
+	}
 }

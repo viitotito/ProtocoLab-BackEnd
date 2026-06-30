@@ -1,7 +1,7 @@
 paths:
   /api/tickets:
     get:
-      summary: Lists all of the company's support tickets
+      summary: Lists all of the company's support tickets.
       tags:
         - Tickets
 
@@ -29,7 +29,7 @@ paths:
                 $ref: "#/components/schemas/Unauthorized"
 
     post:
-      summary: Create a new ticket
+      summary: Create a new ticket.
       tags:
         - Tickets
 
@@ -94,7 +94,7 @@ paths:
 
   /api/tickets/{id}:
     get:
-      summary: Search for a ticket by ID
+      summary: Search for a ticket by ID.
       tags:
         - Tickets    
 
@@ -125,7 +125,7 @@ paths:
                 $ref: "#/components/schemas/MessageResponse"
 
     patch:
-      summary: Updates a ticket
+      summary: Updates a ticket.
       tags:
         - Tickets
 
@@ -198,7 +198,7 @@ paths:
                 $ref: "#/components/schemas/MessageResponse"
 
     delete:
-      summary: Removes a ticket
+      summary: Removes a ticket.
       tags:
         - Tickets
 

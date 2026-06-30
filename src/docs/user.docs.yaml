@@ -1,7 +1,7 @@
 paths:
   /api/users:
     get:
-      summary: Lists company users
+      summary: Lists company users.
       tags:
         - Users
 
@@ -29,7 +29,7 @@ paths:
                 $ref: "#/components/schemas/Unauthorized"
 
     post:
-      summary: Creates a new user (admin only)
+      summary: Creates a new user (admin only).
       tags:
         - Users
 
@@ -96,7 +96,7 @@ paths:
 
   /api/users/{id}:
     get:
-      summary: Search for user by ID
+      summary: Search for user by ID.
       tags:
         - Users
 
@@ -173,7 +173,7 @@ paths:
           description: Validation error
 
     delete:
-      summary: Remove user
+      summary: Remove user.
       tags:
         - Users
 

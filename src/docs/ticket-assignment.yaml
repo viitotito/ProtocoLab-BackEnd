@@ -1,7 +1,7 @@
 paths:
   /api/tickets/{ticketId}/assignees:
     post:
-      summary: Assigns a collaborator to the ticket
+      summary: Assigns a collaborator to the ticket.
       tags:
         - Tickets Assignments
 
@@ -67,7 +67,7 @@ paths:
           description: No permission.
 
     get:
-      summary: Lists the employees assigned to the ticket
+      summary: Lists the employees assigned to the ticket.
       tags:
         - Tickets Assignments
 
@@ -102,7 +102,7 @@ paths:
 
   /api/tickets/{ticketId}/assignees/{userId}:
     delete:
-      summary: Removes a collaborator from the ticket
+      summary: Removes a collaborator from the ticket.
       tags:
         - Tickets Assignments
 

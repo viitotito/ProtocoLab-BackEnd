@@ -1,8 +1,8 @@
 {
 	"result": {
-		"success": "Operation completed successfully",
-		"error": "An error occurred",
-		"invalid_fields": "Invalid fields",
-		"not_found": "Resource not found"
+		"success": "Operation completed successfully.",
+		"error": "An error occurred.",
+		"invalid_fields": "Invalid fields.",
+		"not_found": "Resource not found."
 	}
 }
