@@ -5,11 +5,11 @@ paths:
       tags:
         - Departments
 
-      parameters:
-        - $ref: "#/components/parameters/AcceptLanguage"
-
       security:
         - bearerAuth: []
+
+      parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
 
       responses:
         "200":
@@ -19,10 +19,31 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Department"
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    _count:
+                      type: object
+                      properties:
+                        users:
+                          type: integer
+                        tickets:
+                          type: integer
+
+        "400":
+          description: Validation error or business rule
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
 
         "401":
-          description: Not authenticated
+          description: Invalid or expired access token
           content:
             application/json:
               schema:
@@ -33,11 +54,11 @@ paths:
       tags:
         - Departments
 
-      parameters:
-        - $ref: "#/components/parameters/AcceptLanguage"
-
       security:
         - bearerAuth: []
+
+      parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
 
       requestBody:
         required: true
@@ -63,10 +84,27 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Department"
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Department successfully created
+                  data:
+                    $ref: "#/components/schemas/Department"
 
         "400":
-          description: Validation error
+          description: Validation error or business rule
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+        "401":
+          description: Invalid or expired access token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
 
         "403":
           description: No permission
@@ -82,7 +120,6 @@ paths:
 
       parameters:
         - $ref: "#/components/parameters/AcceptLanguage"
-
         - in: path
           name: id
           required: true
@@ -98,17 +135,33 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/User"
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    email:
+                      type: string
+                    role:
+                      type: string
 
-        "404":
-          description: Department not found
+        "400":
+          description: Validation error or business rule
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
 
         "401":
-          description: Not authenticated
+          description: Invalid or expired access token
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Unauthorized"
+
+        "404":
+          description: Department not found
 
   /api/departments/{id}:
     get:
@@ -126,6 +179,7 @@ paths:
           required: true
           schema:
             type: integer
+          description: Department ID
 
       responses:
         "200":
@@ -133,7 +187,38 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Department"
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  companyId:
+                    type: integer
+                  users:
+                    type: array
+                    items:
+                      type: object
+                  tickets:
+                    type: array
+                    items:
+                      type: object
+
+        "400":
+          description: Validation error or business rule
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+        "401":
+          description: Invalid or expired access token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
 
         "404":
           description: Department not found
@@ -153,6 +238,7 @@ paths:
           required: true
           schema:
             type: integer
+          description: Department ID
 
       requestBody:
         required: true
@@ -169,9 +255,30 @@ paths:
       responses:
         "200":
           description: Department successfully updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Department successfully updated
+                  data:
+                    $ref: "#/components/schemas/Department"
 
         "400":
-          description: Validation error
+          description: Validation error or business rule
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+        "401":
+          description: Invalid or expired access token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
 
         "404":
           description: Department not found
@@ -191,13 +298,29 @@ paths:
           required: true
           schema:
             type: integer
+          description: Department ID
 
       responses:
         "200":
           description: Department successfully removed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
 
         "400":
-          description: It is not possible to remove (existing links)
+          description: Validation error or business rule
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+        "401":
+          description: Invalid or expired access token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
 
         "404":
           description: Department not found

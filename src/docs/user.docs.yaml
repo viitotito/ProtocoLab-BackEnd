@@ -5,11 +5,11 @@ paths:
       tags:
         - Users
 
-      parameters:
-        - $ref: "#/components/parameters/AcceptLanguage"
-
       security:
         - bearerAuth: []
+
+      parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
 
       responses:
         "200":
@@ -21,23 +21,30 @@ paths:
                 items:
                   $ref: "#/components/schemas/User"
 
+        "400":
+          description: Validation error or business rule
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
         "401":
-          description: Invalid or expired token
+          description: Invalid or expired access token
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Unauthorized"
 
     post:
-      summary: Creates a new user (admin only).
+      summary: Creates a new user.
       tags:
         - Users
 
-      parameters:
-        - $ref: "#/components/parameters/AcceptLanguage"
-
       security:
         - bearerAuth: []
+
+      parameters:
+        - $ref: "#/components/parameters/AcceptLanguage"
 
       requestBody:
         required: true
@@ -58,11 +65,12 @@ paths:
 
                 email:
                   type: string
-                  example: jhond@email.com
+                  format: email
+                  example: john@email.com
 
                 password:
                   type: string
-                  example: senha123
+                  example: password123
 
                 role:
                   type: string
@@ -78,7 +86,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User successfully created
+
+                  user:
+                    $ref: "#/components/schemas/User"
 
         "400":
           description: Validation error or business rule
@@ -87,12 +102,15 @@ paths:
               schema:
                 $ref: "#/components/schemas/ValidationError"
 
-        "403":
-          description: No permission
+        "401":
+          description: Invalid or expired access token
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Unauthorized"
+
+        "403":
+          description: No permission
 
   /api/users/{id}:
     get:
@@ -110,6 +128,7 @@ paths:
           required: true
           schema:
             type: integer
+          description: User ID
 
       responses:
         "200":
@@ -117,13 +136,54 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
+                type: object
+                properties:
+                  id:
+                    type: integer
+
+                  name:
+                    type: string
+
+                  email:
+                    type: string
+
+                  role:
+                    type: string
+
+                  departmentId:
+                    type: integer
+
+                  department:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+
+        "400":
+          description: Validation error or business rule
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+        "401":
+          description: Invalid or expired access token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
 
         "404":
           description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
 
     patch:
-      summary: Update user information
+      summary: Update user information.
       tags:
         - Users
 
@@ -137,6 +197,7 @@ paths:
           required: true
           schema:
             type: integer
+          description: User ID
 
       requestBody:
         required: true
@@ -151,11 +212,12 @@ paths:
 
                 email:
                   type: string
-                  example: janed@email.com
+                  format: email
+                  example: jane@email.com
 
                 password:
                   type: string
-                  example: senha123
+                  example: password123
 
                 role:
                   type: string
@@ -168,9 +230,38 @@ paths:
       responses:
         "200":
           description: User successfully updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User successfully updated
+
+                  user:
+                    $ref: "#/components/schemas/User"
 
         "400":
-          description: Validation error
+          description: Validation error or business rule
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+        "401":
+          description: Invalid or expired access token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
 
     delete:
       summary: Remove user.
@@ -187,10 +278,33 @@ paths:
           required: true
           schema:
             type: integer
+          description: User ID
 
       responses:
         "200":
           description: User successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+        "400":
+          description: Validation error or business rule
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+        "401":
+          description: Invalid or expired access token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
 
         "404":
           description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"

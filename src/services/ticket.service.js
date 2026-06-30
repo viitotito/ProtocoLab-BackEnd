@@ -1,4 +1,5 @@
 import prisma from "../configs/prisma.js";
+import { AppError } from "../utils/appError.js";
 
 const PRIORITIES = ["HIGH", "NORMAL", "LOW"];
 const STATUS = ["OPEN", "IN_PROGRESS", "CLOSED"];
@@ -15,14 +16,13 @@ const STATUS = ["OPEN", "IN_PROGRESS", "CLOSED"];
  * @param {string} data.description - Descrição do ticket.
  * @param {string} data.departmentId - ID do departamento.
  * @param {string} data.priority - Prioridade (HIGH | NORMAL | LOW).
- * @param {Function} t - Função de tradução i18n.
  *
  * @returns {Promise<Object>} Ticket criado.
  *
- * @throws {Error} Se departamento não existir.
- * @throws {Error} Se prioridade for inválida.
+ * @throws {AppError} Se departamento não existir.
+ * @throws {AppError} Se prioridade for inválida.
  */
-export async function createTicket(companyId, ownerId, data, t) {
+export async function createTicket(companyId, ownerId, data) {
   const { title, description, departmentId, priority } = data;
 
   const department = await prisma.department.findFirst({
@@ -33,11 +33,11 @@ export async function createTicket(companyId, ownerId, data, t) {
   });
 
   if (!department) {
-    throw new Error(t("ticket:error.department_invalid"));
+    throw new AppError("ticket:error.department_invalid");
   }
 
   if (!PRIORITIES.includes(priority)) {
-    throw new Error(t("ticket:error.invalid_priority"));
+    throw new AppError("ticket:error.invalid_priority");
   }
 
   return prisma.ticket.create({
@@ -95,6 +95,7 @@ export async function listTickets(companyId) {
       id: true,
       title: true,
       status: true,
+      priority: true,
       opening: true,
       completion: true,
 
@@ -129,13 +130,12 @@ export async function listTickets(companyId) {
  * @function getTicketById
  * @param {string} id - ID do ticket.
  * @param {string} companyId - ID da empresa.
- * @param {Function} t - Função de tradução i18n.
  *
  * @returns {Promise<Object>} Ticket encontrado com relações.
  *
- * @throws {Error} Se o ticket não existir.
+ * @throws {AppError} Se o ticket não existir.
  */
-export async function getTicketById(id, companyId, t) {
+export async function getTicketById(id, companyId) {
   const ticket = await prisma.ticket.findFirst({
     where: {
       id,
@@ -185,7 +185,7 @@ export async function getTicketById(id, companyId, t) {
   });
 
   if (!ticket) {
-    throw new Error(t("ticket:error.ticket_not_found"));
+    throw new AppError("ticket:error.ticket_not_found", 404);
   }
 
   return ticket;
@@ -204,15 +204,14 @@ export async function getTicketById(id, companyId, t) {
  * @param {string} [data.departmentId]
  * @param {string} [data.priority]
  * @param {string} [data.status]
- * @param {Function} t - Função de tradução i18n.
  *
  * @returns {Promise<Object>} Ticket atualizado.
  *
- * @throws {Error} Se ticket não existir.
- * @throws {Error} Se departamento inválido.
- * @throws {Error} Se prioridade ou status inválidos.
+ * @throws {AppError} Se ticket não existir.
+ * @throws {AppError} Se departamento inválido.
+ * @throws {AppError} Se prioridade ou status inválidos.
  */
-export async function updateTicket(id, companyId, data, t) {
+export async function updateTicket(id, companyId, data) {
   const ticket = await prisma.ticket.findFirst({
     where: {
       id,
@@ -223,7 +222,7 @@ export async function updateTicket(id, companyId, data, t) {
   });
 
   if (!ticket) {
-    throw new Error(t("ticket:error.ticket_not_found"));
+    throw new AppError("ticket:error.ticket_not_found", 404);
   }
 
   if (data.departmentId) {
@@ -235,16 +234,16 @@ export async function updateTicket(id, companyId, data, t) {
     });
 
     if (!department) {
-      throw new Error(t("ticket:error.department_invalid"));
+      throw new AppError("ticket:error.department_invalid");
     }
   }
 
   if (data.priority && !PRIORITIES.includes(data.priority)) {
-    throw new Error(t("ticket:error.invalid_priority"));
+    throw new AppError("ticket:error.invalid_priority");
   }
 
   if (data.status && !STATUS.includes(data.status)) {
-    throw new Error(t("ticket:error.invalid_status"));
+    throw new AppError("ticket:error.invalid_status");
   }
 
   const updateData = { ...data };
@@ -277,13 +276,12 @@ export async function updateTicket(id, companyId, data, t) {
  * @function deleteTicket
  * @param {string} id - ID do ticket.
  * @param {string} companyId - ID da empresa.
- * @param {Function} t - Função de tradução i18n.
  *
  * @returns {Promise<Object>} Mensagem de sucesso.
  *
- * @throws {Error} Se ticket não existir.
+ * @throws {AppError} Se ticket não existir.
  */
-export async function deleteTicket(id, companyId, t) {
+export async function deleteTicket(id, companyId) {
   const deleted = await prisma.ticket.deleteMany({
     where: {
       id,
@@ -294,11 +292,11 @@ export async function deleteTicket(id, companyId, t) {
   });
 
   if (deleted.count === 0) {
-    throw new Error(t("ticket:error.ticket_not_found"));
+    throw new AppError("ticket:error.ticket_not_found", 404);
   }
 
   return {
-    message: t("ticket:success.ticket_deleted"),
+    message: "ticket:success.ticket_deleted",
   };
 }
 
@@ -310,15 +308,14 @@ export async function deleteTicket(id, companyId, t) {
  * @param {string} ticketId - ID do ticket.
  * @param {string} userId - ID do usuário.
  * @param {string} companyId - ID da empresa.
- * @param {Function} t - Função de tradução i18n.
  *
  * @returns {Promise<Object>} Relação ticket-usuário criada.
  *
- * @throws {Error} Se ticket não existir.
- * @throws {Error} Se usuário não existir.
- * @throws {Error} Se já estiver atribuído.
+ * @throws {AppError} Se ticket não existir.
+ * @throws {AppError} Se usuário não existir.
+ * @throws {AppError} Se já estiver atribuído.
  */
-export async function assignUser(ticketId, userId, companyId, t) {
+export async function assignUser(ticketId, userId, companyId) {
   const ticket = await prisma.ticket.findFirst({
     where: {
       id: ticketId,
@@ -329,7 +326,7 @@ export async function assignUser(ticketId, userId, companyId, t) {
   });
 
   if (!ticket) {
-    throw new Error(t("ticket:error.ticket_not_found"));
+    throw new AppError("ticket:error.ticket_not_found", 404);
   }
 
   const user = await prisma.user.findFirst({
@@ -340,7 +337,7 @@ export async function assignUser(ticketId, userId, companyId, t) {
   });
 
   if (!user) {
-    throw new Error(t("ticket:error.user_not_found"));
+    throw new AppError("ticket:error.user_not_found", 404);
   }
 
   const exists = await prisma.ticketAssignment.findUnique({
@@ -353,7 +350,7 @@ export async function assignUser(ticketId, userId, companyId, t) {
   });
 
   if (exists) {
-    throw new Error(t("ticket:error.already_assigned"));
+    throw new AppError("ticket:error.already_assigned");
   }
 
   return prisma.ticketAssignment.create({
@@ -383,13 +380,12 @@ export async function assignUser(ticketId, userId, companyId, t) {
  * @function listAssignedUsers
  * @param {string} ticketId - ID do ticket.
  * @param {string} companyId - ID da empresa.
- * @param {Function} t - Função de tradução i18n.
  *
  * @returns {Promise<Array<Object>>} Lista de usuários atribuídos.
  *
- * @throws {Error} Se ticket não existir.
+ * @throws {AppError} Se ticket não existir.
  */
-export async function listAssignedUsers(ticketId, companyId, t) {
+export async function listAssignedUsers(ticketId, companyId) {
   const ticket = await prisma.ticket.findFirst({
     where: {
       id: ticketId,
@@ -415,7 +411,7 @@ export async function listAssignedUsers(ticketId, companyId, t) {
   });
 
   if (!ticket) {
-    throw new Error(t("ticket:error.ticket_not_found"));
+    throw new AppError("ticket:error.ticket_not_found", 404);
   }
 
   return ticket.assignees.map((a) => a.user);
@@ -429,14 +425,13 @@ export async function listAssignedUsers(ticketId, companyId, t) {
  * @param {string} ticketId - ID do ticket.
  * @param {string} userId - ID do usuário.
  * @param {string} companyId - ID da empresa.
- * @param {Function} t - Função de tradução i18n.
  *
  * @returns {Promise<Object>} Mensagem de sucesso.
  *
- * @throws {Error} Se ticket não existir.
- * @throws {Error} Se atribuição não existir.
+ * @throws {AppError} Se ticket não existir.
+ * @throws {AppError} Se atribuição não existir.
  */
-export async function removeUser(ticketId, userId, companyId, t) {
+export async function removeUser(ticketId, userId, companyId) {
   const ticket = await prisma.ticket.findFirst({
     where: {
       id: ticketId,
@@ -447,7 +442,7 @@ export async function removeUser(ticketId, userId, companyId, t) {
   });
 
   if (!ticket) {
-    throw new Error(t("ticket:error.ticket_not_found"));
+    throw new AppError("ticket:error.ticket_not_found", 404);
   }
 
   const assignment = await prisma.ticketAssignment.findUnique({
@@ -460,7 +455,7 @@ export async function removeUser(ticketId, userId, companyId, t) {
   });
 
   if (!assignment) {
-    throw new Error(t("ticket:error.assignment_not_found"));
+    throw new AppError("ticket:error.assignment_not_found", 404);
   }
 
   await prisma.ticketAssignment.delete({
@@ -473,6 +468,6 @@ export async function removeUser(ticketId, userId, companyId, t) {
   });
 
   return {
-    message: t("ticket:success.user_removed"),
+    message: "ticket:success.user_removed",
   };
 }

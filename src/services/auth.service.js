@@ -212,8 +212,4 @@ export async function me(userId) {
  */
 export async function logout(res) {
   clearRefreshCookie(res);
-
-  return {
-    message: "auth:success.logout_success",
-  };
 }

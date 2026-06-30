@@ -56,13 +56,20 @@ paths:
 
         "400":
           description: Validation error or business rule
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
 
         "401":
-          description: Not authenticated
+          description: Invalid or expired access token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
 
         "404":
           description: Ticket not found
-
 
     get:
       summary: List ticket comments.
@@ -107,9 +114,22 @@ paths:
                         role:
                           type: string
 
+        "400":
+          description: Validation error or business rule
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+        "401":
+          description: Invalid or expired access token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+
         "404":
           description: Ticket not found
-
 
   /api/tickets/{id}/comments/{commentId}:
     patch:
@@ -174,7 +194,18 @@ paths:
                         type: string
 
         "400":
-          description: Validation error
+          description: Validation error or business rule
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+        "401":
+          description: Invalid or expired access token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
 
         "403":
           description: No permission to edit
@@ -182,12 +213,11 @@ paths:
         "404":
           description: Comment not found
 
-
     delete:
       summary: Delete comment.
       tags:
         - Comments
-        
+
       security:
         - bearerAuth: []
 
@@ -218,6 +248,20 @@ paths:
                   message:
                     type: string
                     example: Comment successfully deleted
+
+        "400":
+          description: Validation error or business rule
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+        "401":
+          description: Invalid or expired access token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
 
         "403":
           description: No permission to delete

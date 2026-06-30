@@ -9,14 +9,15 @@ export async function getUser(req, res) {
   try {
     const user = await userService.getUserById(
       Number(req.params.id),
-      req.user.companyId,
-      req.t
+      req.user.companyId
     );
 
     return res.json(user);
+
   } catch (err) {
-    return res.status(404).json({
-      message: err.message,
+
+    return res.status(err.statusCode || 400).json({
+      message: req.t(err.message),
     });
   }
 }
@@ -25,17 +26,18 @@ export async function createUser(req, res) {
   try {
     const user = await userService.createUser(
       req.user.companyId,
-      req.body,
-      req.t
+      req.body
     );
 
     return res.status(201).json({
       message: req.t("user:success.user_created"),
       user,
     });
+
   } catch (err) {
-    return res.status(400).json({
-      message: err.message,
+
+    return res.status(err.statusCode || 400).json({
+      message: req.t(err.message),
     });
   }
 }
@@ -46,17 +48,18 @@ export async function updateUser(req, res) {
       Number(req.params.id),
       req.user.companyId,
       req.user.id,
-      req.body,
-      req.t
+      req.body
     );
 
     return res.json({
       message: req.t("user:success.user_updated"),
       user,
     });
+
   } catch (err) {
-    return res.status(400).json({
-      message: err.message,
+
+    return res.status(err.statusCode || 400).json({
+      message: req.t(err.message),
     });
   }
 }
@@ -66,16 +69,17 @@ export async function deleteUser(req, res) {
     await userService.deleteUser(
       Number(req.params.id),
       req.user.companyId,
-      req.user.id,
-      req.t
+      req.user.id
     );
 
-    return res.json({
+    return res.status(200).json({
       message: req.t("user:success.user_deleted"),
     });
+
   } catch (err) {
-    return res.status(400).json({
-      message: err.message,
+
+    return res.status(err.statusCode || 400).json({
+      message: req.t(err.message),
     });
   }
 }

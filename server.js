@@ -23,7 +23,7 @@ app.use(express.json());
 
 app.use(cookieParser());
 
-const allowedOrigins = process.env.ALLOWED_ORIGINS.split(",");
+const allowedOrigins = process.env.ALLOWED_ORIGINS.split(",").map(origin => origin.trim());
 
 app.use(
   cors({

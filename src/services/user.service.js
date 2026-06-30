@@ -1,5 +1,6 @@
 import prisma from "../configs/prisma.js";
 import bcrypt from "bcrypt";
+import { AppError } from "../utils/appError.js";
 
 /**
  * Cria um novo usuário dentro de uma empresa.
@@ -13,14 +14,13 @@ import bcrypt from "bcrypt";
  * @param {string} data.password - Senha do usuário.
  * @param {string} data.role - Papel do usuário (ex: Admin, User).
  * @param {string} data.departmentId - ID do departamento.
- * @param {Function} t - Função de tradução i18n.
  *
  * @returns {Promise<Object>} Usuário criado (sem senha).
  *
- * @throws {Error} Se email já existir na empresa.
- * @throws {Error} Se departamento for inválido.
+ * @throws {AppError} Se email já existir na empresa.
+ * @throws {AppError} Se departamento for inválido.
  */
-export async function createUser(companyId, data, t) {
+export async function createUser(companyId, data) {
   const { name, email, password, role, departmentId } = data;
 
   const userExists = await prisma.user.findFirst({
@@ -28,7 +28,7 @@ export async function createUser(companyId, data, t) {
   });
 
   if (userExists) {
-    throw new Error(t("user:error.email_exists"));
+    throw new AppError("user:error.email_exists");
   }
 
   const department = await prisma.department.findFirst({
@@ -36,7 +36,7 @@ export async function createUser(companyId, data, t) {
   });
 
   if (!department) {
-    throw new Error(t("user:error.department_invalid"));
+    throw new AppError("user:error.department_invalid");
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -89,13 +89,12 @@ export async function listUsers(companyId) {
  * @function getUserById
  * @param {string} id - ID do usuário.
  * @param {string} companyId - ID da empresa.
- * @param {Function} t - Função de tradução i18n.
  *
  * @returns {Promise<Object>} Usuário encontrado com departamento.
  *
- * @throws {Error} Se usuário não existir.
+ * @throws {AppError} Se usuário não existir.
  */
-export async function getUserById(id, companyId, t) {
+export async function getUserById(id, companyId) {
   const user = await prisma.user.findFirst({
     where: { id, companyId },
     select: {
@@ -111,7 +110,7 @@ export async function getUserById(id, companyId, t) {
   });
 
   if (!user) {
-    throw new Error(t("user:error.user_not_found"));
+    throw new AppError("user:error.user_not_found");
   }
 
   return user;
@@ -136,17 +135,16 @@ export async function getUserById(id, companyId, t) {
  * @param {string} [data.password]
  * @param {string} [data.role]
  * @param {string} [data.departmentId]
- * @param {Function} t - Função de tradução i18n.
  *
  * @returns {Promise<Object>} Usuário atualizado.
  *
- * @throws {Error} Se tentar atualizar a si mesmo.
- * @throws {Error} Se email já existir.
- * @throws {Error} Se usuário não existir.
+ * @throws {AppError} Se tentar atualizar a si mesmo.
+ * @throws {AppError} Se email já existir.
+ * @throws {AppError} Se usuário não existir.
  */
-export async function updateUser(id, companyId, loggedUserId, data, t) {
+export async function updateUser(id, companyId, loggedUserId, data) {
   if (id === loggedUserId) {
-    throw new Error(t("user:error.self_update"));
+    throw new AppError("user:error.self_update");
   }
 
   const updateData = { ...data };
@@ -165,7 +163,7 @@ export async function updateUser(id, companyId, loggedUserId, data, t) {
     });
 
     if (emailExists) {
-      throw new Error(t("user:error.email_exists"));
+      throw new AppError("user:error.email_exists");
     }
   }
 
@@ -175,7 +173,7 @@ export async function updateUser(id, companyId, loggedUserId, data, t) {
   });
 
   if (result.count === 0) {
-    throw new Error(t("user:error.user_not_found"));
+    throw new AppError("user:error.user_not_found",404);
   }
 
   return prisma.user.findFirst({
@@ -202,17 +200,16 @@ export async function updateUser(id, companyId, loggedUserId, data, t) {
  * @param {string} id - ID do usuário.
  * @param {string} companyId - ID da empresa.
  * @param {string} loggedUserId - ID do usuário autenticado.
- * @param {Function} t - Função de tradução i18n.
  *
  * @returns {Promise<Object>} Mensagem de sucesso.
  *
- * @throws {Error} Se tentar deletar a si mesmo.
- * @throws {Error} Se usuário não existir.
- * @throws {Error} Se houver dependências (P2003).
+ * @throws {AppError} Se tentar deletar a si mesmo.
+ * @throws {AppError} Se usuário não existir.
+ * @throws {AppError} Se houver dependências (P2003).
  */
-export async function deleteUser(id, companyId, loggedUserId, t) {
+export async function deleteUser(id, companyId, loggedUserId) {
   if (id === loggedUserId) {
-    throw new Error(t("user:error.self_delete"));
+    throw new AppError("user:error.self_delete");
   }
 
   try {
@@ -224,15 +221,15 @@ export async function deleteUser(id, companyId, loggedUserId, t) {
     });
 
     if (deleted.count === 0) {
-      throw new Error(t("user:error.user_not_found"));
+      throw new AppError("user:error.user_not_found",404);
     }
 
     return {
-      message: t("user:success.user_deleted"),
+      message: "user:success.user_deleted",
     };
   } catch (err) {
     if (err.code === "P2003") {
-      throw new Error(t("user:error.has_dependencies"));
+      throw new AppError("user:error.has_dependencies");
     }
 
     throw err;
