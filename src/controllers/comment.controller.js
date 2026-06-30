@@ -6,14 +6,15 @@ export async function createComment(req, res) {
       Number(req.params.id),
       req.user.id,
       req.user.companyId,
-      req.body,
-      req.t
+      req.body
     );
 
     return res.status(201).json(comment);
+
   } catch (err) {
-    return res.status(400).json({
-      message: err.message,
+
+    return res.status(err.statusCode || 400).json({
+      message: req.t(err.message),
     });
   }
 }
@@ -22,14 +23,15 @@ export async function listComments(req, res) {
   try {
     const comments = await commentService.listComments(
       Number(req.params.id),
-      req.user.companyId,
-      req.t
+      req.user.companyId
     );
 
-    return res.json(comments);
+    return res.status(200).json(comments);
+
   } catch (err) {
-    return res.status(400).json({
-      message: err.message,
+
+    return res.status(err.statusCode || 400).json({
+      message: req.t(err.message),
     });
   }
 }
@@ -41,14 +43,15 @@ export async function updateComment(req, res) {
       Number(req.params.commentId),
       req.user.companyId,
       req.user.id,
-      req.body,
-      req.t
+      req.body
     );
 
-    return res.json(comment);
+    return res.status(200).json(comment);
+
   } catch (err) {
-    return res.status(400).json({
-      message: err.message,
+
+    return res.status(err.statusCode || 400).json({
+      message: req.t(err.message),
     });
   }
 }
@@ -59,14 +62,17 @@ export async function deleteComment(req, res) {
       Number(req.params.id),
       Number(req.params.commentId),
       req.user.companyId,
-      req.user.id,
-      req.t
+      req.user.id
     );
 
-    return res.json(result);
+    return res.status(200).json({
+      message: req.t(result.message),
+    });
+
   } catch (err) {
-    return res.status(400).json({
-      message: err.message,
+    
+    return res.status(err.statusCode || 400).json({
+      message: req.t(err.message),
     });
   }
 }

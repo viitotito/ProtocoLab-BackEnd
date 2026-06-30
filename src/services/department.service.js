@@ -1,4 +1,5 @@
 import prisma from "../configs/prisma.js";
+import { AppError } from "../utils/appError.js";
 
 /**
  * Cria um novo departamento dentro de uma empresa.
@@ -9,13 +10,12 @@ import prisma from "../configs/prisma.js";
  * @param {Object} data - Dados do departamento.
  * @param {string} data.name - Nome do departamento.
  * @param {string} data.description - Descrição do departamento.
- * @param {Function} t - Função de tradução i18n.
  *
  * @returns {Promise<Object>} Departamento criado.
  *
- * @throws {Error} Se já existir um departamento com o mesmo nome na empresa.
+ * @throws {AppError} Se já existir um departamento com o mesmo nome na empresa.
  */
-export async function createDepartment(companyId, data, t) {
+export async function createDepartment(companyId, data) {
   const { name, description } = data;
 
   const exists = await prisma.department.findFirst({
@@ -26,7 +26,7 @@ export async function createDepartment(companyId, data, t) {
   });
 
   if (exists) {
-    throw new Error(t("department:error.name_exists"));
+    throw new AppError("department:error.name_exists");
   }
 
   return prisma.department.create({
@@ -71,13 +71,12 @@ export async function listDepartments(companyId) {
  * @function listUsersByDepartment
  * @param {string} departmentId - ID do departamento.
  * @param {string} companyId - ID da empresa.
- * @param {Function} t - Função de tradução i18n.
  *
  * @returns {Promise<Array<Object>>} Lista de usuários do departamento.
  *
- * @throws {Error} Se o departamento não existir.
+ * @throws {AppError} Se o departamento não existir.
  */
-export async function listUsersByDepartment(departmentId, companyId, t) {
+export async function listUsersByDepartment(departmentId, companyId) {
   const department = await prisma.department.findFirst({
     where: {
       id: departmentId,
@@ -86,7 +85,7 @@ export async function listUsersByDepartment(departmentId, companyId, t) {
   });
 
   if (!department) {
-    throw new Error(t("department:error.department_not_found"));
+    throw new AppError("department:error.department_not_found", 404);
   }
 
   return prisma.user.findMany({
@@ -110,13 +109,12 @@ export async function listUsersByDepartment(departmentId, companyId, t) {
  * @function getDepartmentById
  * @param {string} id - ID do departamento.
  * @param {string} companyId - ID da empresa.
- * @param {Function} t - Função de tradução i18n.
  *
  * @returns {Promise<Object>} Departamento com relações (users e tickets).
  *
- * @throws {Error} Se o departamento não existir.
+ * @throws {AppError} Se o departamento não existir.
  */
-export async function getDepartmentById(id, companyId, t) {
+export async function getDepartmentById(id, companyId) {
   const department = await prisma.department.findFirst({
     where: {
       id,
@@ -129,7 +127,7 @@ export async function getDepartmentById(id, companyId, t) {
   });
 
   if (!department) {
-    throw new Error(t("department:error.department_not_found"));
+    throw new AppError("department:error.department_not_found", 404);
   }
 
   return department;
@@ -143,13 +141,12 @@ export async function getDepartmentById(id, companyId, t) {
  * @param {string} id - ID do departamento.
  * @param {string} companyId - ID da empresa.
  * @param {Object} data - Dados atualizados do departamento.
- * @param {Function} t - Função de tradução i18n.
  *
  * @returns {Promise<Object>} Departamento atualizado.
  *
- * @throws {Error} Se o departamento não for encontrado.
+ * @throws {AppError} Se o departamento não for encontrado.
  */
-export async function updateDepartment(id, companyId, data, t) {
+export async function updateDepartment(id, companyId, data) {
   const result = await prisma.department.updateMany({
     where: {
       id,
@@ -159,7 +156,7 @@ export async function updateDepartment(id, companyId, data, t) {
   });
 
   if (result.count === 0) {
-    throw new Error(t("department:error.department_not_found"));
+    throw new AppError("department:error.department_not_found", 404);
   }
 
   return prisma.department.findFirst({
@@ -177,15 +174,14 @@ export async function updateDepartment(id, companyId, data, t) {
  * @function deleteDepartment
  * @param {string} id - ID do departamento.
  * @param {string} companyId - ID da empresa.
- * @param {Function} t - Função de tradução i18n.
  *
  * @returns {Promise<Object>} Mensagem de sucesso.
  *
- * @throws {Error} Se departamento não existir.
- * @throws {Error} Se houver usuários vinculados.
- * @throws {Error} Se houver tickets vinculados.
+ * @throws {AppError} Se departamento não existir.
+ * @throws {AppError} Se houver usuários vinculados.
+ * @throws {AppError} Se houver tickets vinculados.
  */
-export async function deleteDepartment(id, companyId, t) {
+export async function deleteDepartment(id, companyId) {
   const department = await prisma.department.findFirst({
     where: {
       id,
@@ -198,20 +194,20 @@ export async function deleteDepartment(id, companyId, t) {
   });
 
   if (!department) {
-    throw new Error(t("department:error.department_not_found"));
+    throw new AppError("department:error.department_not_found", 404);
   }
 
   if (department.users.length > 0) {
-    throw new Error(t("department:error.has_users"));
+    throw new AppError("department:error.has_users",);
   }
 
   if (department.tickets.length > 0) {
-    throw new Error(t("department:error.has_tickets"));
+    throw new AppError("department:error.has_tickets");
   }
 
   await prisma.department.delete({
     where: { id },
   });
 
-  return { message: t("department:success.department_deleted") };
+  return { message: "department:success.department_deleted" };
 }

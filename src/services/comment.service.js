@@ -1,4 +1,5 @@
 import prisma from "../configs/prisma.js";
+import { AppError } from "../utils/appError.js";
 
 /**
  * Busca um ticket garantindo que ele pertence à empresa informada.
@@ -7,13 +8,12 @@ import prisma from "../configs/prisma.js";
  * @function getTicket
  * @param {string} ticketId - ID do ticket.
  * @param {string} companyId - ID da empresa.
- * @param {Function} t - Função de tradução i18n.
  *
  * @returns {Promise<Object>} Ticket encontrado.
  *
- * @throws {Error} Se o ticket não existir ou não pertencer à empresa.
+ * @throws {AppError} Se o ticket não existir ou não pertencer à empresa.
  */
-async function getTicket(ticketId, companyId, t) {
+async function getTicket(ticketId, companyId) {
   const ticket = await prisma.ticket.findFirst({
     where: {
       id: ticketId,
@@ -24,7 +24,7 @@ async function getTicket(ticketId, companyId, t) {
   });
 
   if (!ticket) {
-    throw new Error(t("comment:error.ticket_not_found"));
+    throw new AppError("comment:error.ticket_not_found", 404);
   }
 
   return ticket;
@@ -40,14 +40,13 @@ async function getTicket(ticketId, companyId, t) {
  * @param {string} companyId - ID da empresa.
  * @param {Object} data - Dados do comentário.
  * @param {string} data.description - Conteúdo do comentário.
- * @param {Function} t - Função de tradução i18n.
  *
  * @returns {Promise<Object>} Comentário criado com dados do usuário.
  *
- * @throws {Error} Se o ticket não existir.
+ * @throws {AppError} Se o ticket não existir.
  */
-export async function createComment(ticketId, userId, companyId, data, t) {
-  await getTicket(ticketId, companyId, t);
+export async function createComment(ticketId, userId, companyId, data) {
+  await getTicket(ticketId, companyId);
 
   return prisma.comment.create({
     data: {
@@ -77,14 +76,13 @@ export async function createComment(ticketId, userId, companyId, data, t) {
  * @function listComments
  * @param {string} ticketId - ID do ticket.
  * @param {string} companyId - ID da empresa.
- * @param {Function} t - Função de tradução i18n.
  *
  * @returns {Promise<Array<Object>>} Lista de comentários.
  *
- * @throws {Error} Se o ticket não existir.
+ * @throws {AppError} Se o ticket não existir.
  */
-export async function listComments(ticketId, companyId, t) {
-  await getTicket(ticketId, companyId, t);
+export async function listComments(ticketId, companyId) {
+  await getTicket(ticketId, companyId);
 
   return prisma.comment.findMany({
     where: { ticketId },
@@ -117,23 +115,21 @@ export async function listComments(ticketId, companyId, t) {
  * @param {string} userId - ID do usuário autenticado.
  * @param {Object} data - Dados do comentário.
  * @param {string} data.description - Novo conteúdo do comentário.
- * @param {Function} t - Função de tradução i18n.
  *
  * @returns {Promise<Object>} Comentário atualizado.
  *
- * @throws {Error} Se ticket não existir.
- * @throws {Error} Se comentário não existir.
- * @throws {Error} Se usuário não for o autor.
+ * @throws {AppError} Se ticket não existir.
+ * @throws {AppError} Se comentário não existir.
+ * @throws {AppError} Se usuário não for o autor.
  */
 export async function updateComment(
   ticketId,
   commentId,
   companyId,
   userId,
-  data,
-  t
+  data
 ) {
-  await getTicket(ticketId, companyId, t);
+  await getTicket(ticketId, companyId);
 
   const comment = await prisma.comment.findFirst({
     where: {
@@ -143,11 +139,11 @@ export async function updateComment(
   });
 
   if (!comment) {
-    throw new Error(t("comment:error.comment_not_found"));
+    throw new AppError("comment:error.comment_not_found", 404);
   }
 
   if (comment.userId !== userId) {
-    throw new Error(t("comment:error.not_allowed"));
+    throw new AppError("comment:error.not_allowed", 403);
   }
 
   return prisma.comment.update({
@@ -181,22 +177,20 @@ export async function updateComment(
  * @param {string} commentId - ID do comentário.
  * @param {string} companyId - ID da empresa.
  * @param {string} userId - ID do usuário autenticado.
- * @param {Function} t - Função de tradução i18n.
  *
  * @returns {Promise<Object>} Mensagem de sucesso.
  *
- * @throws {Error} Se ticket não existir.
- * @throws {Error} Se comentário não existir.
- * @throws {Error} Se usuário não for o autor.
+ * @throws {AppError} Se ticket não existir.
+ * @throws {AppError} Se comentário não existir.
+ * @throws {AppError} Se usuário não for o autor.
  */
 export async function deleteComment(
   ticketId,
   commentId,
   companyId,
-  userId,
-  t
+  userId
 ) {
-  await getTicket(ticketId, companyId, t);
+  await getTicket(ticketId, companyId);
 
   const comment = await prisma.comment.findFirst({
     where: {
@@ -206,18 +200,20 @@ export async function deleteComment(
   });
 
   if (!comment) {
-    throw new Error(t("comment:error.comment_not_found"));
+    throw new AppError("comment:error.comment_not_found", 404);
   }
 
   if (comment.userId !== userId) {
-    throw new Error(t("comment:error.not_allowed"));
+    throw new AppError("comment:error.not_allowed", 403);
   }
 
   await prisma.comment.delete({
-    where: { id: commentId },
+    where: {
+      id: commentId,
+    },
   });
 
   return {
-    message: t("comment:success.comment_deleted"),
+    message: "comment:success.comment_deleted",
   };
 }
