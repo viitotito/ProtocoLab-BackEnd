@@ -40,6 +40,32 @@ export async function listDepartments(companyId) {
   });
 }
 
+export async function listUsersByDepartment(departmentId, companyId, t) {
+  const department = await prisma.department.findFirst({
+    where: {
+      id: departmentId,
+      companyId,
+    },
+  });
+
+  if (!department) {
+    throw new Error(t("department:error.department_not_found"));
+  }
+
+  return prisma.user.findMany({
+    where: {
+      departmentId,
+      companyId,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+    },
+  });
+}
+
 export async function getDepartmentById(id, companyId, t) {
   const department = await prisma.department.findFirst({
     where: {

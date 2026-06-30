@@ -24,6 +24,10 @@ router.post(
 
 router.get("/", departmentController.listDepartments);
 
+router.get(
+  "/:id/users",
+  departmentController.listUsersByDepartment);
+
 router.get("/:id", departmentController.getDepartment);
 
 router.patch(
