@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 const prisma = new PrismaClient();
 
 async function main() {
-  const senha = await bcrypt.hash("admin123", 10);
+  const password = await bcrypt.hash("admin123", 10);
 
   const company = await prisma.company.create({
     data: {
@@ -14,26 +14,26 @@ async function main() {
     },
   });
 
-  const rh = await prisma.department.create({
+  const hr = await prisma.department.create({
     data: {
-      name: "RH",
-      description: "Recursos Humanos",
+      name: "HR",
+      description: "Human Resources",
       companyId: company.id,
     },
   });
 
-  const ti = await prisma.department.create({
+  const it = await prisma.department.create({
     data: {
-      name: "TI",
-      description: "Tecnologia da Informação",
+      name: "IT",
+      description: "Information Technology",
       companyId: company.id,
     },
   });
 
-  const financeiro = await prisma.department.create({
+  const finance = await prisma.department.create({
     data: {
-      name: "Financeiro",
-      description: "Departamento Financeiro",
+      name: "Finance",
+      description: "Finance Department",
       companyId: company.id,
     },
   });
@@ -42,52 +42,52 @@ async function main() {
     data: {
       name: "Admin",
       email: "admin@protocolab.com",
-      password: senha,
+      password,
       role: "ADMIN",
       companyId: company.id,
-      departmentId: rh.id,
+      departmentId: hr.id,
     },
   });
 
-  const gerente = await prisma.user.create({
+  const manager = await prisma.user.create({
     data: {
-      name: "Maria Souza",
+      name: "Maria Smith",
       email: "maria@protocolab.com",
-      password: senha,
-      role: "GERENTE",
+      password,
+      role: "MANAGER",
       companyId: company.id,
-      departmentId: rh.id,
+      departmentId: hr.id,
     },
   });
 
-  const colaborador = await prisma.user.create({
+  const employee = await prisma.user.create({
     data: {
-      name: "João Silva",
-      email: "joao@protocolab.com",
-      password: senha,
+      name: "John Doe",
+      email: "john@protocolab.com",
+      password,
       role: "USER",
       companyId: company.id,
-      departmentId: ti.id,
+      departmentId: it.id,
     },
   });
 
   const ticket1 = await prisma.ticket.create({
     data: {
-      title: "Erro no sistema",
-      description: "Não é possível realizar login.",
+      title: "System error",
+      description: "Unable to log into the system.",
       status: "OPEN",
-      ownerId: colaborador.id,
-      departmentId: ti.id,
+      ownerId: employee.id,
+      departmentId: it.id,
     },
   });
 
   const ticket2 = await prisma.ticket.create({
     data: {
-      title: "Solicitação de notebook",
-      description: "Necessário equipamento para novo colaborador.",
+      title: "Laptop request",
+      description: "Need a new laptop for onboarding employee.",
       status: "IN_PROGRESS",
-      ownerId: gerente.id,
-      departmentId: rh.id,
+      ownerId: manager.id,
+      departmentId: hr.id,
     },
   });
 
@@ -99,7 +99,7 @@ async function main() {
       },
       {
         ticketId: ticket1.id,
-        userId: gerente.id,
+        userId: manager.id,
       },
       {
         ticketId: ticket2.id,
@@ -111,24 +111,24 @@ async function main() {
   await prisma.comment.createMany({
     data: [
       {
-        description: "Chamado recebido.",
+        description: "Ticket received.",
         ticketId: ticket1.id,
         userId: admin.id,
       },
       {
-        description: "Analisando problema.",
+        description: "Investigating the issue.",
         ticketId: ticket1.id,
-        userId: gerente.id,
+        userId: manager.id,
       },
       {
-        description: "Notebook solicitado ao fornecedor.",
+        description: "Laptop requested from supplier.",
         ticketId: ticket2.id,
-        userId: gerente.id,
+        userId: manager.id,
       },
     ],
   });
 
-  console.log("Banco populado com sucesso!");
+  console.log("Database seeded successfully!");
 }
 
 main()
