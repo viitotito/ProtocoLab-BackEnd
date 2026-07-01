@@ -24,7 +24,7 @@ export function roles() {
       return next();
     }
 
-    if (requesterRole === "GERENTE") {
+    if (requesterRole === "MANAGER") {
       if (roleToAssign === "ADMIN") {
         return res.status(403).json({
           message: req.t("middleware:user.cannot_create_admin"),
