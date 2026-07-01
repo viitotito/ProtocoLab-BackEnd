@@ -60,7 +60,7 @@ export async function register(data) {
         name: employeeName,
         email: companyEmail,
         password: hashedPassword,
-        role: "Admin",
+        role: "ADMIN",
         companyId: company.id,
         departmentId: department.id,
       },
